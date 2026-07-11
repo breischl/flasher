@@ -87,4 +87,50 @@ class DomRendererTest {
         root.click(".link") // ‹ Decks
         assertEquals(Screen.Home, controller.state.screen)
     }
+
+    private fun HTMLElement.startFirstDeck() {
+        click(".deck-item")
+        click(".primary")
+    }
+
+    @Test
+    fun studyShowsPromptThenAnswerOnTap() {
+        val (root, _) = mount()
+        root.startFirstDeck() // greetings, card 0 = hello/hola
+        assertContains(root.textContent!!, "hello")
+        assertContains(root.textContent!!, "1 / 2")
+        root.click(".card")
+        assertContains(root.textContent!!, "hola")
+    }
+
+    @Test
+    fun prevIsDisabledOnFirstCard() {
+        val (root, _) = mount()
+        root.startFirstDeck()
+        val prev = root.querySelector(".nav-btn") as HTMLElement
+        assertTrue(prev.hasAttribute("disabled"))
+    }
+
+    @Test
+    fun nextAdvancesToSecondCard() {
+        val (root, controller) = mount()
+        root.startFirstDeck()
+        // Next is the second .nav-btn
+        (root.querySelectorAll(".nav-btn").item(1) as HTMLElement).click()
+        assertEquals(1, controller.state.position)
+        assertContains(root.textContent!!, "bye")
+    }
+
+    @Test
+    fun finishingCompletesTheDeckAndBackGoesHome() {
+        val (root, controller) = mount()
+        root.startFirstDeck() // 2 cards
+        val next = { (root.querySelectorAll(".nav-btn").item(1) as HTMLElement).click() }
+        next() // -> card 1
+        next() // -> complete
+        assertEquals(Screen.Complete, controller.state.screen)
+        assertContains(root.textContent!!, "Deck complete")
+        root.click(".primary")
+        assertEquals(Screen.Home, controller.state.screen)
+    }
 }

@@ -31,8 +31,8 @@ class DomRenderer(private val root: HTMLElement) : Renderer {
                 when (state.screen) {
                     Screen.Home -> homeScreen(state)
                     Screen.DeckOptions -> optionsScreen(state)
-                    Screen.Study -> studyPlaceholder(state)
-                    Screen.Complete -> completePlaceholder()
+                    Screen.Study -> studyScreen(state)
+                    Screen.Complete -> completeScreen(state)
                 }
             }
         }
@@ -72,17 +72,44 @@ class DomRenderer(private val root: HTMLElement) : Renderer {
         }
     }
 
-    // Filled in by Step 5.
-    private fun FlowContent.studyPlaceholder(state: AppState) {
-        topBar(backLabel = "‹ Home")
-        p { +"Studying ${state.currentDeck?.title} — card ${state.position + 1} / ${state.total}" }
+    private fun FlowContent.studyScreen(state: AppState) {
+        val card = state.currentCard ?: return
+        div("study-bar") {
+            button(classes = "link") {
+                onClickFunction = { controller.goHome() }
+                +"‹ Home"
+            }
+            span("progress") { +"${state.position + 1} / ${state.total}" }
+        }
+
+        div("card ${if (state.isFlipped) "is-back" else "is-front"}") {
+            onClickFunction = { controller.flip() }
+            span("card-side") { +if (state.isFlipped) "answer" else "prompt" }
+            span("card-text") { +if (state.isFlipped) card.back else card.front }
+            span("card-hint muted") { +"tap to flip" }
+        }
+
+        div("nav") {
+            button(classes = "nav-btn") {
+                if (state.position == 0) attributes["disabled"] = "true"
+                onClickFunction = { controller.prev() }
+                +"‹ Prev"
+            }
+            button(classes = "nav-btn") {
+                onClickFunction = { controller.next() }
+                +if (state.position == state.total - 1) "Finish ›" else "Next ›"
+            }
+        }
     }
 
-    private fun FlowContent.completePlaceholder() {
-        h2 { +"Deck complete" }
-        button(classes = "primary") {
-            onClickFunction = { controller.goHome() }
-            +"Back to home"
+    private fun FlowContent.completeScreen(state: AppState) {
+        div("complete") {
+            h2 { +"Deck complete" }
+            p("muted") { +"You went through all ${state.total} cards in ${state.currentDeck?.title}." }
+            button(classes = "primary") {
+                onClickFunction = { controller.goHome() }
+                +"Back to home"
+            }
         }
     }
 
