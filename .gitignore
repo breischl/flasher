@@ -1,0 +1,19 @@
+# Gradle
+.gradle/
+build/
+
+# Kotlin
+.kotlin/
+
+# IDE
+.idea/
+*.iml
+*.ipr
+*.iws
+.fleet/
+
+# Node (Kotlin/JS toolchain)
+node_modules/
+
+# OS
+.DS_Store
