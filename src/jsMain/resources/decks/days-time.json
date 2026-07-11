@@ -1,0 +1,21 @@
+{
+  "id": "days-time",
+  "title": "2 · Days & Time",
+  "order": 90,
+  "cards": [
+    { "front": "Monday", "back": "lunedì (loo-neh-DEE)" },
+    { "front": "Tuesday", "back": "martedì (mar-teh-DEE)" },
+    { "front": "Wednesday", "back": "mercoledì (mehr-koh-leh-DEE)" },
+    { "front": "Thursday", "back": "giovedì (joh-veh-DEE)" },
+    { "front": "Friday", "back": "venerdì (veh-nehr-DEE)" },
+    { "front": "Saturday", "back": "sabato (SAH-bah-toh)" },
+    { "front": "Sunday", "back": "domenica (doh-MEH-nee-kah)" },
+    { "front": "Today", "back": "oggi (OHD-jee)" },
+    { "front": "Tomorrow", "back": "domani (doh-MAH-nee)" },
+    { "front": "Yesterday", "back": "ieri (YEH-ree)" },
+    { "front": "Now", "back": "adesso (ah-DEHS-soh)" },
+    { "front": "What time is it?", "back": "Che ore sono? (keh OH-reh SOH-noh)" },
+    { "front": "The morning", "back": "la mattina (lah maht-TEE-nah)" },
+    { "front": "The evening", "back": "la sera (lah SEH-rah)" }
+  ]
+}

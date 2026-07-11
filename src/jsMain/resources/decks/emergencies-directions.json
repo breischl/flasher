@@ -1,0 +1,19 @@
+{
+  "id": "emergencies-directions",
+  "title": "3 · Emergencies & Directions",
+  "order": 130,
+  "cards": [
+    { "front": "I'm lost", "back": "Mi sono perso (mee SOH-noh PEHR-soh)" },
+    { "front": "Can you help me?", "back": "Può aiutarmi? (pwoh ah-yoo-TAR-mee)" },
+    { "front": "Call a doctor!", "back": "Chiami un medico! (KYAH-mee oon MEH-dee-koh)" },
+    { "front": "The pharmacy", "back": "la farmacia (lah far-mah-CHEE-ah)" },
+    { "front": "The hospital", "back": "l'ospedale (loh-speh-DAH-leh)" },
+    { "front": "The police", "back": "la polizia (lah poh-lee-TSEE-ah)" },
+    { "front": "I need help", "back": "Ho bisogno di aiuto (oh bee-ZOH-nyoh dee ah-YOO-toh)" },
+    { "front": "I feel sick", "back": "Mi sento male (mee SEHN-toh MAH-leh)" },
+    { "front": "Where is the bathroom?", "back": "Dov'è il bagno? (doh-VEH eel BAH-nyoh)" },
+    { "front": "It's an emergency", "back": "È un'emergenza (eh oon-eh-mehr-JEHN-tsah)" },
+    { "front": "Is it far?", "back": "È lontano? (eh lohn-TAH-noh)" },
+    { "front": "Is it near?", "back": "È vicino? (eh vee-CHEE-noh)" }
+  ]
+}

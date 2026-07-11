@@ -1,0 +1,19 @@
+{
+  "id": "food-drink-basics",
+  "title": "1 · Food & Drink Basics",
+  "order": 40,
+  "cards": [
+    { "front": "Water", "back": "l'acqua (LAHK-kwah)" },
+    { "front": "Still water", "back": "acqua naturale (AHK-kwah nah-too-RAH-leh)" },
+    { "front": "Sparkling water", "back": "acqua frizzante (AHK-kwah free-DZAHN-teh)" },
+    { "front": "Bread", "back": "il pane (eel PAH-neh)" },
+    { "front": "Wine", "back": "il vino (eel VEE-noh)" },
+    { "front": "Beer", "back": "la birra (lah BEER-rah)" },
+    { "front": "Coffee", "back": "il caffè (eel kahf-FEH)" },
+    { "front": "Milk", "back": "il latte (eel LAHT-teh)" },
+    { "front": "The menu", "back": "il menù (eel meh-NOO)" },
+    { "front": "The bill / check", "back": "il conto (eel KOHN-toh)" },
+    { "front": "A coffee, please", "back": "Un caffè, per favore (oon kahf-FEH)" },
+    { "front": "Cheers!", "back": "Salute! (sah-LOO-teh)" }
+  ]
+}

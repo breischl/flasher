@@ -1,0 +1,19 @@
+{
+  "id": "at-the-restaurant",
+  "title": "2 · At the Restaurant",
+  "order": 60,
+  "cards": [
+    { "front": "A table for two, please", "back": "Un tavolo per due, per favore (oon TAH-voh-loh pehr DOO-eh)" },
+    { "front": "I would like...", "back": "Vorrei... (vor-RAY)" },
+    { "front": "The menu, please", "back": "Il menù, per favore (eel meh-NOO)" },
+    { "front": "The wine list", "back": "la lista dei vini (lah LEE-stah day VEE-nee)" },
+    { "front": "What do you recommend?", "back": "Cosa consiglia? (KOH-zah kohn-SEE-lyah)" },
+    { "front": "The check, please", "back": "Il conto, per favore (eel KOHN-toh)" },
+    { "front": "Waiter / Excuse me", "back": "Cameriere (kah-meh-RYEH-reh)" },
+    { "front": "It's delicious", "back": "È delizioso (eh deh-lee-TSYOH-zoh)" },
+    { "front": "I'm vegetarian", "back": "Sono vegetariano (SOH-noh veh-jeh-tah-RYAH-noh)" },
+    { "front": "The starter / appetizer", "back": "l'antipasto (lahn-tee-PAH-stoh)" },
+    { "front": "A glass of red wine", "back": "un bicchiere di vino rosso (oon beek-KYEH-reh dee VEE-noh ROHS-soh)" },
+    { "front": "Enjoy your meal!", "back": "Buon appetito! (bwohn ahp-peh-TEE-toh)" }
+  ]
+}

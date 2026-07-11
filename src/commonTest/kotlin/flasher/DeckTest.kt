@@ -10,13 +10,13 @@ class DeckTest {
             id = "greetings",
             title = "Greetings",
             cards = listOf(
-                Card(front = "hello", back = "hola"),
-                Card(front = "goodbye", back = "adiós"),
+                Card(front = "hello", back = "ciao"),
+                Card(front = "goodbye", back = "arrivederci"),
             ),
         )
 
         assertEquals("greetings", deck.id)
         assertEquals(2, deck.cards.size)
-        assertEquals("hola", deck.cards.first().back)
+        assertEquals("ciao", deck.cards.first().back)
     }
 }

@@ -1,0 +1,19 @@
+{
+  "id": "travel-sentences",
+  "title": "4 · Travel Sentences",
+  "order": 140,
+  "cards": [
+    { "front": "Can you help me, please?", "back": "Mi può aiutare, per favore? (mee pwoh ah-yoo-TAH-reh)" },
+    { "front": "I have a reservation under the name...", "back": "Ho una prenotazione a nome... (oh OO-nah preh-noh-tah-TSYOH-neh ah NOH-meh)" },
+    { "front": "Does this train go to Rome?", "back": "Questo treno va a Roma? (KWEH-stoh TREH-noh vah ah ROH-mah)" },
+    { "front": "Could you speak more slowly?", "back": "Può parlare più lentamente? (pwoh par-LAH-reh pyoo lehn-tah-MEHN-teh)" },
+    { "front": "Where can I buy a ticket?", "back": "Dove posso comprare un biglietto? (DOH-veh POHS-soh kohm-PRAH-reh)" },
+    { "front": "How do I get to the center?", "back": "Come arrivo al centro? (KOH-meh ah-REE-voh ahl CHEN-troh)" },
+    { "front": "I would like to book a table", "back": "Vorrei prenotare un tavolo (vor-RAY preh-noh-TAH-reh)" },
+    { "front": "What time does it open?", "back": "A che ora apre? (ah keh OH-rah AH-preh)" },
+    { "front": "Can you write it down, please?", "back": "Può scriverlo, per favore? (pwoh SKREE-vehr-loh)" },
+    { "front": "I've lost my passport", "back": "Ho perso il passaporto (oh PEHR-soh eel pahs-sah-POR-toh)" },
+    { "front": "How much does a ticket to Florence cost?", "back": "Quanto costa un biglietto per Firenze? (KWAHN-toh KOH-stah)" },
+    { "front": "Is there wifi here?", "back": "C'è il wifi qui? (cheh eel WEE-fee kwee)" }
+  ]
+}

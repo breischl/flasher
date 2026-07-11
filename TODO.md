@@ -10,7 +10,6 @@ Nothing here is required — the app is complete and deployed. These are deliber
 - **"Which side first"** option — per-deck choice of prompt vs answer as the starting face. The
   DeckOptions screen is the intended home for this (alongside the existing Shuffle toggle).
 - **Persist shuffle** — shuffle state/order is intentionally not saved across sessions today.
-- **More decks / other languages** — the model is language-agnostic; only Spanish decks ship now.
 
 ## Minor follow-ups
 

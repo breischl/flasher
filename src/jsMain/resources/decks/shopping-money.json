@@ -1,0 +1,19 @@
+{
+  "id": "shopping-money",
+  "title": "2 · Shopping & Money",
+  "order": 70,
+  "cards": [
+    { "front": "How much is it?", "back": "Quanto costa? (KWAHN-toh KOH-stah)" },
+    { "front": "It's too expensive", "back": "È troppo caro (eh TROHP-poh KAH-roh)" },
+    { "front": "Cash", "back": "i contanti (ee kohn-TAHN-tee)" },
+    { "front": "Credit card", "back": "la carta di credito (lah KAR-tah dee KREH-dee-toh)" },
+    { "front": "Do you accept cards?", "back": "Accettate carte? (ah-cheht-TAH-teh KAR-teh)" },
+    { "front": "The receipt", "back": "lo scontrino (loh skohn-TREE-noh)" },
+    { "front": "I'll take it", "back": "Lo prendo (loh PREHN-doh)" },
+    { "front": "I'm just looking", "back": "Sto solo guardando (stoh SOH-loh gwar-DAHN-doh)" },
+    { "front": "Open", "back": "aperto (ah-PEHR-toh)" },
+    { "front": "Closed", "back": "chiuso (KYOO-zoh)" },
+    { "front": "The shop / store", "back": "il negozio (eel neh-GOH-tsyoh)" },
+    { "front": "Can I have a bag?", "back": "Posso avere un sacchetto? (POHS-soh ah-VEH-reh oon sahk-KEHT-toh)" }
+  ]
+}

@@ -1,8 +1,8 @@
 # Flasher
 
-A lightweight, mobile-first flashcard webapp for studying (the bundled decks teach Spanish, but
-the model is language-agnostic). Pick a deck, optionally shuffle, then tap a card to flip between
-prompt and answer and step through the deck. It's a **static site** — no backend — written in
+A lightweight, mobile-first flashcard webapp for studying (the bundled decks teach Italian for
+travel, graded from basics to full sentences, but the model is language-agnostic). Pick a deck,
+optionally shuffle, then tap a card to flip between prompt and answer and step through the deck. It's a **static site** — no backend — written in
 Kotlin Multiplatform and compiled to JavaScript.
 
 ## Features

@@ -1,0 +1,21 @@
+{
+  "id": "getting-around",
+  "title": "2 · Getting Around",
+  "order": 50,
+  "cards": [
+    { "front": "The train station", "back": "la stazione (lah stah-TSYOH-neh)" },
+    { "front": "The train", "back": "il treno (eel TREH-noh)" },
+    { "front": "The bus", "back": "l'autobus (LOW-toh-boos)" },
+    { "front": "The ticket", "back": "il biglietto (eel bee-LYEHT-toh)" },
+    { "front": "The platform / track", "back": "il binario (eel bee-NAH-ryoh)" },
+    { "front": "The airport", "back": "l'aeroporto (lah-eh-roh-POR-toh)" },
+    { "front": "The taxi", "back": "il taxi (eel TAHK-see)" },
+    { "front": "Where is...?", "back": "Dov'è...? (doh-VEH)" },
+    { "front": "Left", "back": "a sinistra (ah see-NEE-strah)" },
+    { "front": "Right", "back": "a destra (ah DEH-strah)" },
+    { "front": "Straight ahead", "back": "dritto (DREET-toh)" },
+    { "front": "Entrance", "back": "l'entrata (lehn-TRAH-tah)" },
+    { "front": "Exit", "back": "l'uscita (loo-SHEE-tah)" },
+    { "front": "Where is the station?", "back": "Dov'è la stazione? (doh-VEH lah stah-TSYOH-neh)" }
+  ]
+}

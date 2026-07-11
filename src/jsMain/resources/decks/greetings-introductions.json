@@ -1,0 +1,19 @@
+{
+  "id": "greetings-introductions",
+  "title": "1 · Greetings & Introductions",
+  "order": 20,
+  "cards": [
+    { "front": "Hi / Bye (informal)", "back": "Ciao (chow)" },
+    { "front": "Good morning / Hello", "back": "Buongiorno (bwohn-JOR-noh)" },
+    { "front": "Good afternoon / evening", "back": "Buonasera (bwoh-nah-SEH-rah)" },
+    { "front": "Good night", "back": "Buonanotte (bwoh-nah-NOHT-teh)" },
+    { "front": "Goodbye", "back": "Arrivederci (ah-ree-veh-DEHR-chee)" },
+    { "front": "See you later", "back": "A più tardi (ah pyoo TAR-dee)" },
+    { "front": "How are you? (informal)", "back": "Come stai? (KOH-meh sty)" },
+    { "front": "I'm well, thanks", "back": "Sto bene, grazie (stoh BEH-neh)" },
+    { "front": "My name is...", "back": "Mi chiamo... (mee KYAH-moh)" },
+    { "front": "What's your name? (informal)", "back": "Come ti chiami? (KOH-meh tee KYAH-mee)" },
+    { "front": "Nice to meet you", "back": "Piacere (pyah-CHEH-reh)" },
+    { "front": "Where are you from?", "back": "Di dove sei? (dee DOH-veh say)" }
+  ]
+}

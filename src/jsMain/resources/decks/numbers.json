@@ -1,16 +1,27 @@
 {
   "id": "numbers",
-  "title": "Numbers 1–10",
+  "title": "1 · Numbers",
+  "order": 30,
   "cards": [
-    { "front": "one", "back": "uno" },
-    { "front": "two", "back": "dos" },
-    { "front": "three", "back": "tres" },
-    { "front": "four", "back": "cuatro" },
-    { "front": "five", "back": "cinco" },
-    { "front": "six", "back": "seis" },
-    { "front": "seven", "back": "siete" },
-    { "front": "eight", "back": "ocho" },
-    { "front": "nine", "back": "nueve" },
-    { "front": "ten", "back": "diez" }
+    { "front": "0", "back": "zero (DZEH-roh)" },
+    { "front": "1", "back": "uno (OO-noh)" },
+    { "front": "2", "back": "due (DOO-eh)" },
+    { "front": "3", "back": "tre (treh)" },
+    { "front": "4", "back": "quattro (KWAHT-troh)" },
+    { "front": "5", "back": "cinque (CHEEN-kweh)" },
+    { "front": "6", "back": "sei (say)" },
+    { "front": "7", "back": "sette (SEHT-teh)" },
+    { "front": "8", "back": "otto (OHT-toh)" },
+    { "front": "9", "back": "nove (NOH-veh)" },
+    { "front": "10", "back": "dieci (DYEH-chee)" },
+    { "front": "11", "back": "undici (OON-dee-chee)" },
+    { "front": "12", "back": "dodici (DOH-dee-chee)" },
+    { "front": "15", "back": "quindici (KWEEN-dee-chee)" },
+    { "front": "20", "back": "venti (VEHN-tee)" },
+    { "front": "30", "back": "trenta (TREHN-tah)" },
+    { "front": "40", "back": "quaranta (kwah-RAHN-tah)" },
+    { "front": "50", "back": "cinquanta (cheen-KWAHN-tah)" },
+    { "front": "100", "back": "cento (CHEN-toh)" },
+    { "front": "1000", "back": "mille (MEEL-leh)" }
   ]
 }

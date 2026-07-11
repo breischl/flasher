@@ -1,0 +1,19 @@
+{
+  "id": "accommodation",
+  "title": "2 · At the Hotel",
+  "order": 80,
+  "cards": [
+    { "front": "The hotel", "back": "l'albergo (lahl-BEHR-goh)" },
+    { "front": "I have a reservation", "back": "Ho una prenotazione (oh OO-nah preh-noh-tah-TSYOH-neh)" },
+    { "front": "A single room", "back": "una camera singola (OO-nah KAH-meh-rah SEEN-goh-lah)" },
+    { "front": "A double room", "back": "una camera doppia (OO-nah KAH-meh-rah DOHP-pyah)" },
+    { "front": "The key", "back": "la chiave (lah KYAH-veh)" },
+    { "front": "The wifi", "back": "il wifi (eel WEE-fee)" },
+    { "front": "What's the wifi password?", "back": "Qual è la password del wifi? (kwah-LEH lah PAH-swohrd)" },
+    { "front": "Breakfast", "back": "la colazione (lah koh-lah-TSYOH-neh)" },
+    { "front": "Is breakfast included?", "back": "La colazione è inclusa? (lah koh-lah-TSYOH-neh eh een-KLOO-zah)" },
+    { "front": "Check-out", "back": "il check-out (eel chehk-owt)" },
+    { "front": "What time is check-out?", "back": "A che ora è il check-out? (ah keh OH-rah)" },
+    { "front": "The air conditioning", "back": "l'aria condizionata (LAH-ryah kohn-dee-tsyoh-NAH-tah)" }
+  ]
+}

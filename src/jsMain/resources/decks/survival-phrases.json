@@ -1,0 +1,19 @@
+{
+  "id": "survival-phrases",
+  "title": "1 · Survival Phrases",
+  "order": 10,
+  "cards": [
+    { "front": "Yes", "back": "Sì (SEE)" },
+    { "front": "No", "back": "No (NOH)" },
+    { "front": "Please", "back": "Per favore (pehr fah-VOH-reh)" },
+    { "front": "Thank you", "back": "Grazie (GRAH-tsee-eh)" },
+    { "front": "You're welcome", "back": "Prego (PREH-goh)" },
+    { "front": "Excuse me (to get by / attention)", "back": "Scusi (SKOO-zee)" },
+    { "front": "I'm sorry", "back": "Mi dispiace (mee dee-SPYAH-cheh)" },
+    { "front": "Help!", "back": "Aiuto! (ah-YOO-toh)" },
+    { "front": "I don't understand", "back": "Non capisco (nohn kah-PEE-skoh)" },
+    { "front": "Do you speak English?", "back": "Parla inglese? (PAR-lah een-GLEH-zeh)" },
+    { "front": "I don't speak Italian", "back": "Non parlo italiano (nohn PAR-loh ee-tah-LYAH-noh)" },
+    { "front": "Can you repeat, please?", "back": "Può ripetere, per favore? (pwoh ree-PEH-teh-reh)" }
+  ]
+}
