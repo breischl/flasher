@@ -95,6 +95,14 @@ class FlashcardController(
         saveCurrent()
     }
 
+    /** From the Complete screen, jump straight into studying the next deck in order (if any). */
+    suspend fun startNextDeck() {
+        if (state.screen != Screen.Complete) return
+        val next = state.nextDeckSummary ?: return
+        selectDeck(next.id) // -> DeckOptions with defaults (shuffle off, prompt first)
+        start()             // -> Study
+    }
+
     /** Return to the deck list, abandoning the current session. */
     fun goHome() {
         store?.clear()

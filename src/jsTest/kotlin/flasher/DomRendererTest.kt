@@ -10,6 +10,7 @@ import kotlin.test.AfterTest
 import kotlin.test.Test
 import kotlin.test.assertContains
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
@@ -188,13 +189,36 @@ class DomRendererTest {
     @Test
     fun finishingCompletesTheDeckAndBackGoesHome() {
         val (root, controller) = mount()
-        root.startFirstDeck() // 2 cards
+        root.startFirstDeck() // greetings, 2 cards (has a following deck, so Back is a link)
         val next = { (root.querySelectorAll(".nav-btn").item(1) as HTMLElement).click() }
         next() // -> card 1
         next() // -> complete
         assertEquals(Screen.Complete, controller.state.screen)
         assertContains(root.textContent!!, "Deck complete")
-        root.click(".primary")
+        root.click(".link") // Back to home
         assertEquals(Screen.Home, controller.state.screen)
+    }
+
+    @Test
+    fun completeScreenOffersTheNextDeckAndStartsIt() {
+        val (root, controller) = mount()
+        root.startFirstDeck() // greetings; next deck in order is colors
+        val next = { (root.querySelectorAll(".nav-btn").item(1) as HTMLElement).click() }
+        next(); next() // -> complete
+        assertContains(root.textContent!!, "Next deck: Colors")
+        root.click(".primary") // the "Next deck" button
+        assertEquals(Screen.Study, controller.state.screen)
+        assertEquals("colors", controller.state.currentDeck?.id)
+    }
+
+    @Test
+    fun lastDeckCompleteHasNoNextDeckButton() {
+        val (root, controller) = mount()
+        (root.querySelectorAll(".deck-item").item(1) as HTMLElement).click() // colors (last deck)
+        root.click(".primary") // Start
+        (root.querySelectorAll(".nav-btn").item(1) as HTMLElement).click() // 1 card -> complete
+        assertEquals(Screen.Complete, controller.state.screen)
+        assertFalse(root.textContent!!.contains("Next deck"))
+        assertContains(root.textContent!!, "Back to home")
     }
 }

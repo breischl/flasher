@@ -26,6 +26,14 @@ data class AppState(
     /** The natural-order index of the current card, or null when not studying. */
     val currentNaturalIndex: Int? get() = order.getOrNull(position)
 
+    /** The summary of the deck that follows the current one in index order, or null if it's last. */
+    val nextDeckSummary: DeckSummary?
+        get() {
+            val id = currentDeck?.id ?: return null
+            val pos = summaries.indexOfFirst { it.id == id }
+            return if (pos < 0) null else summaries.getOrNull(pos + 1)
+        }
+
     /** The card currently on screen, or null when not studying. */
     val currentCard: Card?
         get() {

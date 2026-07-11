@@ -119,7 +119,13 @@ class DomRenderer(
         div("complete") {
             h2 { +"Deck complete" }
             p("muted") { +"You went through all ${state.total} cards in ${state.currentDeck?.title}." }
-            button(classes = "primary") {
+            state.nextDeckSummary?.let { next ->
+                button(classes = "primary") {
+                    onClickFunction = { scope.launch { controller.startNextDeck() } }
+                    +"Next deck: ${next.title} ›"
+                }
+            }
+            button(classes = if (state.nextDeckSummary == null) "primary" else "link") {
                 onClickFunction = { controller.goHome() }
                 +"Back to home"
             }

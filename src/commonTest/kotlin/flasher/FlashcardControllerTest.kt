@@ -276,6 +276,32 @@ class FlashcardControllerTest {
     }
 
     @Test
+    fun startNextDeckJumpsStraightIntoTheFollowingDeck() = runTest {
+        val c = controller()
+        c.selectDeck("greetings") // 3 cards; next in index is colors
+        c.start()
+        c.next(); c.next(); c.next() // -> Complete
+        assertEquals(Screen.Complete, c.state.screen)
+        c.startNextDeck()
+        assertEquals(Screen.Study, c.state.screen)
+        assertEquals(colors, c.state.currentDeck)
+        assertEquals(0, c.state.position)
+        assertEquals("red", c.state.currentCard?.front)
+    }
+
+    @Test
+    fun startNextDeckOnTheLastDeckIsANoOp() = runTest {
+        val c = controller()
+        c.selectDeck("colors") // last deck in the index
+        c.start()
+        c.next(); c.next() // -> Complete
+        assertEquals(Screen.Complete, c.state.screen)
+        assertNull(c.state.nextDeckSummary)
+        c.startNextDeck()
+        assertEquals(Screen.Complete, c.state.screen)
+    }
+
+    @Test
     fun goHomeReturnsToDeckListAndClearsSavedPosition() = runTest {
         val store = FakeSessionStore(SavedPosition("greetings", 1))
         val c = controller(store = store)
