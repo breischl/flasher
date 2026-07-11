@@ -36,15 +36,15 @@ class PersistenceTest {
         val store = LocalStorageStore(key)
 
         // First "session": study to the third card.
-        val first = FlashcardController(persistDecks, store = store)
-        first.selectDeck("verbs")
+        val first = FlashcardController(summariesOf(persistDecks), loadDeck = loaderOf(persistDecks), store = store)
+        runSync { first.selectDeck("verbs") }
         first.start()
         first.next()
         first.next() // position 2
 
         // Second "session" (page reload): a fresh controller resumes from the store.
-        val second = FlashcardController(persistDecks, store = store)
-        second.resume()
+        val second = FlashcardController(summariesOf(persistDecks), loadDeck = loaderOf(persistDecks), store = store)
+        runSync { second.resume() }
         assertEquals(Screen.Study, second.state.screen)
         assertEquals("see", second.state.currentCard?.front)
         assertEquals(2, second.state.position)
@@ -53,14 +53,14 @@ class PersistenceTest {
     @Test
     fun goingHomeThenReloadingStartsAtHome() {
         val store = LocalStorageStore(key)
-        val first = FlashcardController(persistDecks, store = store)
-        first.selectDeck("verbs")
+        val first = FlashcardController(summariesOf(persistDecks), loadDeck = loaderOf(persistDecks), store = store)
+        runSync { first.selectDeck("verbs") }
         first.start()
         first.next()
         first.goHome() // clears saved position
 
-        val second = FlashcardController(persistDecks, store = store)
-        second.resume()
+        val second = FlashcardController(summariesOf(persistDecks), loadDeck = loaderOf(persistDecks), store = store)
+        runSync { second.resume() }
         assertEquals(Screen.Home, second.state.screen)
     }
 }

@@ -1,5 +1,7 @@
 package flasher
 
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import kotlinx.html.FlowContent
 import kotlinx.html.button
 import kotlinx.html.div
@@ -13,9 +15,13 @@ import org.w3c.dom.HTMLElement
 
 /**
  * Renders [AppState] to the DOM with kotlinx.html. Stateless: every [render] rebuilds the
- * screen from scratch. User events are dispatched to the bound [FlashcardController].
+ * screen from scratch. User events are dispatched to the bound [FlashcardController]; deck
+ * selection is a suspending (lazy-loading) action, so it's launched on [scope].
  */
-class DomRenderer(private val root: HTMLElement) : Renderer {
+class DomRenderer(
+    private val root: HTMLElement,
+    private val scope: CoroutineScope,
+) : Renderer {
 
     private lateinit var controller: FlashcardController
 
@@ -40,16 +46,16 @@ class DomRenderer(private val root: HTMLElement) : Renderer {
 
     private fun FlowContent.homeScreen(state: AppState) {
         h1 { +"Flasher" }
-        if (state.decks.isEmpty()) {
+        if (state.summaries.isEmpty()) {
             p("muted") { +"No decks available." }
             return
         }
         div("deck-list") {
-            state.decks.forEach { deck ->
+            state.summaries.forEach { summary ->
                 button(classes = "deck-item") {
-                    onClickFunction = { controller.selectDeck(deck.id) }
-                    span("deck-title") { +deck.title }
-                    span("deck-count") { +"${deck.cards.size} cards" }
+                    onClickFunction = { scope.launch { controller.selectDeck(summary.id) } }
+                    span("deck-title") { +summary.title }
+                    span("deck-count") { +"${summary.cardCount} cards" }
                 }
             }
         }

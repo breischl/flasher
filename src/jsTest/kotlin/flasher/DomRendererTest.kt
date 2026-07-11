@@ -28,10 +28,14 @@ class DomRendererTest {
         val root = document.createElement("div") as HTMLElement
         document.body!!.appendChild(root)
         mounted += root
-        val renderer = DomRenderer(root)
-        val controller = FlashcardController(testDecks, onChange = renderer::render)
+        val renderer = DomRenderer(root, immediateScope())
+        val controller = FlashcardController(
+            summariesOf(testDecks),
+            loadDeck = loaderOf(testDecks),
+            onChange = renderer::render,
+        )
         renderer.bind(controller)
-        controller.resume() // no store -> Home
+        runSync { controller.resume() } // no store -> Home
         return root to controller
     }
 

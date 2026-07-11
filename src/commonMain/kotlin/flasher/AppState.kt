@@ -12,7 +12,7 @@ enum class Screen { Home, DeckOptions, Study, Complete }
  */
 data class AppState(
     val screen: Screen,
-    val decks: List<Deck>,
+    val summaries: List<DeckSummary>,
     val currentDeck: Deck? = null,
     val order: List<Int> = emptyList(),
     val position: Int = 0,
@@ -35,6 +35,6 @@ data class AppState(
 
     companion object {
         /** Initial state before any deck is chosen. */
-        fun home(decks: List<Deck>) = AppState(screen = Screen.Home, decks = decks)
+        fun home(summaries: List<DeckSummary>) = AppState(screen = Screen.Home, summaries = summaries)
     }
 }

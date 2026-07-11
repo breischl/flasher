@@ -1,5 +1,6 @@
 package flasher
 
+import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -18,24 +19,44 @@ private fun deck(id: String, vararg fronts: String) =
 
 private val greetings = deck("greetings", "hello", "goodbye", "please")
 private val colors = deck("colors", "red", "blue")
-private val decks = listOf(greetings, colors)
+private val allDecks = listOf(greetings, colors)
+private val index = allDecks.map { DeckSummary(it.id, it.title, it.cards.size) }
+
+/** A lazy deck loader that records which decks were fetched, backed by the in-memory fixtures. */
+private class RecordingLoader(private val decks: List<Deck> = allDecks) {
+    val loaded = mutableListOf<String>()
+    val load: suspend (String) -> Deck = { id ->
+        loaded += id
+        decks.first { it.id == id }
+    }
+}
 
 class FlashcardControllerTest {
 
     private fun controller(
         store: SessionStore? = null,
         shuffle: (Int) -> List<Int> = { n -> (0 until n).shuffled() },
-    ) = FlashcardController(decks, store = store, shuffle = shuffle)
+        loadDeck: suspend (String) -> Deck = RecordingLoader().load,
+    ) = FlashcardController(index, loadDeck = loadDeck, store = store, shuffle = shuffle)
 
     @Test
-    fun startsOnHomeWithAllDecks() {
+    fun startsOnHomeWithEveryDeckSummary() = runTest {
         val c = controller()
         assertEquals(Screen.Home, c.state.screen)
-        assertEquals(decks, c.state.decks)
+        assertEquals(index, c.state.summaries)
     }
 
     @Test
-    fun selectDeckOpensOptions() {
+    fun decksAreNotLoadedUntilSelected() = runTest {
+        val loader = RecordingLoader()
+        val c = controller(loadDeck = loader.load)
+        assertTrue(loader.loaded.isEmpty(), "no deck should be fetched just to show Home")
+        c.selectDeck("greetings")
+        assertEquals(listOf("greetings"), loader.loaded)
+    }
+
+    @Test
+    fun selectDeckLoadsItAndOpensOptions() = runTest {
         val c = controller()
         c.selectDeck("greetings")
         assertEquals(Screen.DeckOptions, c.state.screen)
@@ -44,7 +65,15 @@ class FlashcardControllerTest {
     }
 
     @Test
-    fun toggleShuffleFlipsTheFlag() {
+    fun selectUnknownDeckIsANoOp() = runTest {
+        val c = controller()
+        c.selectDeck("does-not-exist")
+        assertEquals(Screen.Home, c.state.screen)
+        assertNull(c.state.currentDeck)
+    }
+
+    @Test
+    fun toggleShuffleFlipsTheFlag() = runTest {
         val c = controller()
         c.selectDeck("greetings")
         c.toggleShuffle()
@@ -54,7 +83,7 @@ class FlashcardControllerTest {
     }
 
     @Test
-    fun startEntersStudyAtFirstCardInNaturalOrder() {
+    fun startEntersStudyAtFirstCardInNaturalOrder() = runTest {
         val c = controller()
         c.selectDeck("greetings")
         c.start()
@@ -66,7 +95,7 @@ class FlashcardControllerTest {
     }
 
     @Test
-    fun startWithShuffleUsesTheInjectedPermutation() {
+    fun startWithShuffleUsesTheInjectedPermutation() = runTest {
         val c = controller(shuffle = { n -> (n - 1 downTo 0).toList() })
         c.selectDeck("greetings")
         c.toggleShuffle()
@@ -76,7 +105,7 @@ class FlashcardControllerTest {
     }
 
     @Test
-    fun flipTogglesTheCard() {
+    fun flipTogglesTheCard() = runTest {
         val c = controller()
         c.selectDeck("greetings")
         c.start()
@@ -87,7 +116,7 @@ class FlashcardControllerTest {
     }
 
     @Test
-    fun nextAdvancesAndResetsFlip() {
+    fun nextAdvancesAndResetsFlip() = runTest {
         val c = controller()
         c.selectDeck("greetings")
         c.start()
@@ -99,7 +128,7 @@ class FlashcardControllerTest {
     }
 
     @Test
-    fun prevGoesBackAndClampsAtFirstCard() {
+    fun prevGoesBackAndClampsAtFirstCard() = runTest {
         val c = controller()
         c.selectDeck("greetings")
         c.start()
@@ -114,7 +143,7 @@ class FlashcardControllerTest {
     }
 
     @Test
-    fun advancingPastLastCardCompletesTheDeck() {
+    fun advancingPastLastCardCompletesTheDeck() = runTest {
         val c = controller()
         c.selectDeck("colors") // 2 cards
         c.start()
@@ -125,7 +154,7 @@ class FlashcardControllerTest {
     }
 
     @Test
-    fun navigationSavesNaturalIndexEvenWhenShuffled() {
+    fun navigationSavesNaturalIndexEvenWhenShuffled() = runTest {
         val store = FakeSessionStore()
         val c = controller(store = store, shuffle = { n -> (n - 1 downTo 0).toList() })
         c.selectDeck("greetings")
@@ -138,7 +167,7 @@ class FlashcardControllerTest {
     }
 
     @Test
-    fun completingTheDeckClearsSavedPosition() {
+    fun completingTheDeckClearsSavedPosition() = runTest {
         val store = FakeSessionStore()
         val c = controller(store = store)
         c.selectDeck("colors")
@@ -149,7 +178,7 @@ class FlashcardControllerTest {
     }
 
     @Test
-    fun goHomeReturnsToDeckListAndClearsSavedPosition() {
+    fun goHomeReturnsToDeckListAndClearsSavedPosition() = runTest {
         val store = FakeSessionStore(SavedPosition("greetings", 1))
         val c = controller(store = store)
         c.selectDeck("greetings")
@@ -161,7 +190,7 @@ class FlashcardControllerTest {
     }
 
     @Test
-    fun resumeJumpsIntoStudyAtSavedNaturalIndexUnshuffled() {
+    fun resumeJumpsIntoStudyAtSavedNaturalIndexUnshuffled() = runTest {
         val store = FakeSessionStore(SavedPosition("greetings", 2))
         val c = controller(store = store)
         c.resume()
@@ -174,14 +203,14 @@ class FlashcardControllerTest {
     }
 
     @Test
-    fun resumeWithNoSavedPositionShowsHome() {
+    fun resumeWithNoSavedPositionShowsHome() = runTest {
         val c = controller(store = FakeSessionStore(null))
         c.resume()
         assertEquals(Screen.Home, c.state.screen)
     }
 
     @Test
-    fun resumeWithUnknownDeckShowsHome() {
+    fun resumeWithUnknownDeckShowsHome() = runTest {
         val store = FakeSessionStore(SavedPosition("does-not-exist", 0))
         val c = controller(store = store)
         c.resume()
@@ -189,7 +218,7 @@ class FlashcardControllerTest {
     }
 
     @Test
-    fun resumeWithStaleIndexShowsHome() {
+    fun resumeWithStaleIndexShowsHome() = runTest {
         val store = FakeSessionStore(SavedPosition("colors", 99))
         val c = controller(store = store)
         c.resume()

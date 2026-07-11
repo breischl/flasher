@@ -30,11 +30,15 @@ class InputHandlerTest {
         val root = document.createElement("div") as HTMLElement
         document.body!!.appendChild(root)
         mounted += root
-        val renderer = DomRenderer(root)
-        val controller = FlashcardController(inputDecks, onChange = renderer::render)
+        val renderer = DomRenderer(root, immediateScope())
+        val controller = FlashcardController(
+            summariesOf(inputDecks),
+            loadDeck = loaderOf(inputDecks),
+            onChange = renderer::render,
+        )
         renderer.bind(controller)
         InputHandler(controller).attach(root)
-        controller.selectDeck("d")
+        runSync { controller.selectDeck("d") }
         controller.start()
         return root to controller
     }

@@ -26,12 +26,20 @@ Start with `README.md` for the user-facing overview. This file captures the non-
 Domain is pure Kotlin in `commonMain` and knows nothing about the browser, so the UI can be
 swapped without touching logic (design goal: "graduate" to a richer renderer later).
 
-- `commonMain`: `Deck`/`Card`/`AppState`, `FlashcardController` (the state machine, unit-tested),
-  and the `Renderer` / `SessionStore` / `DeckRepository` seams.
+- `commonMain`: `Deck`/`Card`/`DeckSummary`/`AppState`, `FlashcardController` (the state machine,
+  unit-tested), and the `Renderer` / `SessionStore` / `DeckRepository` seams.
 - `jsMain`: `DomRenderer` (kotlinx.html), `InputHandler` (keys + swipe), `LocalStorageStore`,
   `JsonDeckRepository` (fetches `decks/*.json`). `main()` wires it all together.
-- Decks are bundled JSON under `src/jsMain/resources/decks/` (`index.json` lists ids). Adding a
-  deck needs no code change.
+- Decks are bundled JSON under `src/jsMain/resources/decks/`; each file has `id` (= filename stem),
+  `title`, `order`, and `cards`. Adding a deck needs no code change.
+- **Lazy loading**: `DeckRepository` has `loadIndex()` (fetched once at startup → the home list of
+  `DeckSummary`) and `loadDeck(id)` (fetched only when a deck is opened/resumed, then memoized).
+  `selectDeck`/`resume` on the controller are `suspend`; `DomRenderer` launches selection on an
+  injected `CoroutineScope`.
+- **Generated index**: `decks/index.json` is NOT checked in — the `generateDeckIndex` Gradle task
+  (in `build.gradle.kts`, uses `groovy.json.JsonSlurper`) reads the deck files, sorts by `order`,
+  and writes `{id,title,cardCount}` into `build/generated/deckIndex/decks/`, which is wired into the
+  jsMain resources and made a `dependsOn` of `jsProcessResources`.
 - Navigation is wrap-free (past the last card → Complete screen). Persistence stores
   `{deckId, naturalIndex}` (shuffle-independent); shuffle state is NOT persisted.
 

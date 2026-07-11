@@ -2,17 +2,21 @@ package flasher
 
 /**
  * Holds the [AppState] and applies user actions to it, notifying a listener on every change.
- * Pure Kotlin and fully testable: rendering, storage and shuffling are injected.
+ * Pure Kotlin and fully testable: rendering, storage, shuffling and deck loading are injected.
+ *
+ * The home list is driven by the lightweight [index]; a deck's cards are fetched lazily via
+ * [loadDeck] only when the deck is opened (from Home) or resumed.
  *
  * @param shuffle produces a play order (a permutation of `0 until n`) for a deck of size `n`.
  */
 class FlashcardController(
-    private val initialDecks: List<Deck>,
+    private val index: List<DeckSummary>,
+    private val loadDeck: suspend (String) -> Deck,
     private val store: SessionStore? = null,
     private val shuffle: (Int) -> List<Int> = { n -> (0 until n).shuffled() },
     private val onChange: (AppState) -> Unit = {},
 ) {
-    var state: AppState = AppState.home(initialDecks)
+    var state: AppState = AppState.home(index)
         private set
 
     private fun update(newState: AppState) {
@@ -20,9 +24,10 @@ class FlashcardController(
         onChange(newState)
     }
 
-    /** Open a deck's options screen from Home. */
-    fun selectDeck(deckId: String) {
-        val deck = initialDecks.firstOrNull { it.id == deckId } ?: return
+    /** Open a deck's options screen from Home, loading its cards on demand. */
+    suspend fun selectDeck(deckId: String) {
+        if (index.none { it.id == deckId }) return
+        val deck = loadDeck(deckId)
         update(state.copy(screen = Screen.DeckOptions, currentDeck = deck, shuffleOn = false))
     }
 
@@ -76,13 +81,14 @@ class FlashcardController(
     /** Return to the deck list, abandoning the current session. */
     fun goHome() {
         store?.clear()
-        update(AppState.home(initialDecks))
+        update(AppState.home(index))
     }
 
-    /** Restore the last saved position, if any, otherwise show Home. */
-    fun resume() {
+    /** Restore the last saved position, if any, otherwise show Home. Loads the saved deck on demand. */
+    suspend fun resume() {
         val saved = store?.load() ?: return showHome()
-        val deck = initialDecks.firstOrNull { it.id == saved.deckId } ?: return showHome()
+        if (index.none { it.id == saved.deckId }) return showHome()
+        val deck = loadDeck(saved.deckId)
         if (saved.naturalIndex !in deck.cards.indices) return showHome()
         update(
             state.copy(
@@ -96,7 +102,7 @@ class FlashcardController(
         )
     }
 
-    private fun showHome() = update(AppState.home(initialDecks))
+    private fun showHome() = update(AppState.home(index))
 
     private fun saveCurrent() {
         val deck = state.currentDeck ?: return

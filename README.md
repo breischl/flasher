@@ -65,10 +65,15 @@ integration uses).
 
 Decks are plain JSON under `src/jsMain/resources/decks/`:
 
-- `index.json` — an array of deck ids, in display order
-- `<id>.json` — `{ "id", "title", "cards": [ { "front", "back" }, … ] }`
+- `<id>.json` — `{ "id", "title", "order", "cards": [ { "front", "back" }, … ] }` (the filename
+  stem must equal `id`). `order` is an integer that controls the deck's position in the list.
 
-Add a file and list its id in `index.json`; no code changes or recompile of logic required.
+Just add a file and rebuild — **`decks/index.json` is generated at build time** (by the
+`generateDeckIndex` Gradle task) from the deck files, so there's no index to hand-maintain. No code
+changes or recompile of logic required.
+
+Decks load **lazily**: only the generated index (deck titles + card counts) is fetched at startup;
+a deck's cards are fetched the first time you open it, then cached.
 
 ## Architecture
 

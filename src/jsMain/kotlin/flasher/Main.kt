@@ -10,15 +10,21 @@ fun main() {
     val root = document.getElementById("app") as? HTMLElement ?: return
 
     MainScope().launch {
-        val decks = runCatching { JsonDeckRepository().loadDecks() }
+        val repo = JsonDeckRepository()
+        val index = runCatching { repo.loadIndex() }
             .getOrElse { error ->
-                console.error("Failed to load decks", error)
+                console.error("Failed to load deck index", error)
                 emptyList()
             }
 
         val store = LocalStorageStore()
-        val renderer = DomRenderer(root)
-        val controller = FlashcardController(decks, store = store, onChange = renderer::render)
+        val renderer = DomRenderer(root, scope = this)
+        val controller = FlashcardController(
+            index,
+            loadDeck = repo::loadDeck,
+            store = store,
+            onChange = renderer::render,
+        )
         renderer.bind(controller)
         InputHandler(controller).attach(window)
 

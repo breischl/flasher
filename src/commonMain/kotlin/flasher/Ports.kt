@@ -18,7 +18,11 @@ interface SessionStore {
     fun clear()
 }
 
-/** Loads the bundled decks (from JSON resources in the browser). */
+/**
+ * Loads the bundled decks (from JSON resources in the browser). The index is loaded up front so the
+ * home list can render; each deck's cards are fetched lazily, only when that deck is opened.
+ */
 interface DeckRepository {
-    suspend fun loadDecks(): List<Deck>
+    suspend fun loadIndex(): List<DeckSummary>
+    suspend fun loadDeck(id: String): Deck
 }
