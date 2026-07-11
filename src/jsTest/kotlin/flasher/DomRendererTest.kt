@@ -62,6 +62,14 @@ class DomRendererTest {
     }
 
     @Test
+    fun homeHasALinkOutToTheSiteRoot() {
+        val (root, _) = mount()
+        val link = root.querySelector(".site-link") as? org.w3c.dom.HTMLAnchorElement
+        assertNotNull(link, "expected a site-root link on Home")
+        assertEquals("/", link.getAttribute("href"))
+    }
+
+    @Test
     fun clickingADeckOpensItsOptions() {
         val (root, controller) = mount()
         root.click(".deck-item") // first deck = greetings

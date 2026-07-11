@@ -3,6 +3,7 @@ package flasher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.html.FlowContent
+import kotlinx.html.a
 import kotlinx.html.button
 import kotlinx.html.div
 import kotlinx.html.dom.append
@@ -45,6 +46,10 @@ class DomRenderer(
     }
 
     private fun FlowContent.homeScreen(state: AppState) {
+        // A real link out to the site root, so you can leave the app (it lives under /apps/flasher/).
+        div("top-bar") {
+            a(href = "/", classes = "link site-link") { +"‹ breischl.dev" }
+        }
         h1 { +"Flasher" }
         if (state.summaries.isEmpty()) {
             p("muted") { +"No decks available." }
