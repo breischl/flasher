@@ -1,12 +1,10 @@
 # TODO / Ideas
 
-Nothing here is required — the app is complete and deployed. These are deliberately deferred
-(YAGNI) features and minor follow-ups, recorded so they aren't lost.
+Nothing here is required. These are deliberately deferred features and minor follow-ups, recorded so they aren't lost.
 
 ## Deferred features
 
 - **Mastery tracking** — mark cards "known" vs "still learning" per deck; surface a study subset.
-- **In-app deck editing** — currently decks are bundled JSON only; no create/edit UI.
 - **Persist shuffle** — shuffle state/order is intentionally not saved across sessions today.
 
 ## Minor follow-ups
