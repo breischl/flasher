@@ -53,16 +53,22 @@ class DomRenderer(
         h1 { +"Flasher" }
         if (state.summaries.isEmpty()) {
             p("muted") { +"No decks available." }
-            return
-        }
-        div("deck-list") {
-            state.summaries.forEach { summary ->
-                button(classes = "deck-item") {
-                    onClickFunction = { scope.launch { controller.selectDeck(summary.id) } }
-                    span("deck-title") { +summary.title }
-                    span("deck-count") { +"${summary.cardCount} cards" }
+        } else {
+            div("deck-list") {
+                state.summaries.forEach { summary ->
+                    button(classes = "deck-item") {
+                        onClickFunction = { scope.launch { controller.selectDeck(summary.id) } }
+                        span("deck-title") { +summary.title }
+                        span("deck-count") { +"${summary.cardCount} cards" }
+                    }
                 }
             }
+        }
+        // Point would-be contributors at the deck-submission flow (opens GitHub Discussions).
+        a(href = "https://github.com/breischl/flasher/discussions", classes = "link contribute-link") {
+            attributes["target"] = "_blank"
+            attributes["rel"] = "noopener"
+            +"Contribute a deck →"
         }
     }
 

@@ -83,6 +83,13 @@ button:active {
     gap: 0.6rem;
 }
 
+.contribute-link {
+    margin-top: 0.25rem;
+    align-self: flex-start;
+    text-decoration: none;
+    color: inherit;
+}
+
 .deck-item {
     display: flex;
     justify-content: space-between;

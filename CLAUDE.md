@@ -42,6 +42,13 @@ swapped without touching logic (design goal: "graduate" to a richer renderer lat
   jsMain resources and made a `dependsOn` of `jsProcessResources`.
 - Navigation is wrap-free (past the last card → Complete screen). Persistence stores
   `{deckId, naturalIndex}` (shuffle-independent); shuffle state is NOT persisted.
+- **Deck validation**: `validateDecks` (a Groovy task in `build.gradle.kts`, no deps) checks every
+  deck file — required fields, kebab-case `id`, `id` == filename stem, `id` uniqueness, max lengths
+  (id 50 / title 60 / card front,back 200), non-empty cards. It's a `dependsOn` of `generateDeckIndex`
+  and of `check`, so a bad deck fails the build/CI/publish instead of shipping. The authoring contract
+  for outside contributors is `CONTRIBUTING-DECKS.md` + the machine-readable `docs/deck.schema.json`
+  (kept in sync with the task by hand); submissions come in via GitHub Discussions. Note `order` is
+  maintainer-assigned — contributors are told not to set it.
 
 ## Testing convention
 
