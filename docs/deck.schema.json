@@ -2,17 +2,11 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://breischl.dev/apps/flasher/deck.schema.json",
   "title": "Flasher deck",
-  "description": "A single Flasher deck file. Lives at src/jsMain/resources/decks/<id>.json. Full authoring guide: https://github.com/breischl/flasher/blob/main/CONTRIBUTING-DECKS.md",
+  "description": "A single Flasher deck file, saved as src/jsMain/resources/decks/<name>.json. The filename stem (kebab-case, e.g. at-the-restaurant.json) is the deck's id — it is NOT a field in this file. Full authoring guide: https://github.com/breischl/flasher/blob/main/CONTRIBUTING-DECKS.md",
   "type": "object",
   "additionalProperties": false,
-  "required": ["id", "title", "cards"],
+  "required": ["title", "cards"],
   "properties": {
-    "id": {
-      "type": "string",
-      "description": "Kebab-case identifier. MUST equal the filename stem (the app fetches decks/<id>.json), and MUST be unique across all decks. These two rules are enforced by the validateDecks build task, not by this schema.",
-      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
-      "maxLength": 50
-    },
     "title": {
       "type": "string",
       "description": "Human-readable deck name, shown in the home list and as the deck heading.",

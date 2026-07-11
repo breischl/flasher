@@ -5,16 +5,17 @@ build it — and submit it for inclusion. This guide is the contract: follow it 
 pass validation and show up in the app.
 
 If you're an agent: the machine-readable contract is [`docs/deck.schema.json`](docs/deck.schema.json).
-Produce a file that conforms to it, then also honor the two cross-file rules below (which a schema
-can't express).
+Produce a file that conforms to it, and name the file in kebab-case — the filename is the deck id
+(the one rule a schema can't express).
 
 ## What a deck looks like
 
-One JSON object per file, saved as `src/jsMain/resources/decks/<id>.json`:
+One JSON object per file. **The filename is the deck's id** — name the file in kebab-case, e.g.
+`greetings-introductions.json` under `src/jsMain/resources/decks/`. The file itself has no `id`
+field:
 
 ```json
 {
-  "id": "greetings-introductions",
   "title": "Greetings & Introductions",
   "cards": [
     { "front": "Hi / Bye (informal)", "back": "Ciao (chow)" },
@@ -26,12 +27,16 @@ One JSON object per file, saved as `src/jsMain/resources/decks/<id>.json`:
 
 ## The rules
 
+The **filename** is the deck's identity: use kebab-case (`^[a-z0-9]+(-[a-z0-9]+)*$`), **≤ 50 chars**,
+e.g. `food-basics.json`. It's automatically unique (two files can't share a name) — nothing to
+coordinate. Then, inside the file:
+
 | Field   | Required | Rules |
 |---------|----------|-------|
-| `id`    | yes      | Kebab-case (`^[a-z0-9]+(-[a-z0-9]+)*$`), **≤ 50 chars**. **Must equal the filename stem** — a deck with `"id": "food-basics"` must be the file `food-basics.json`. **Must be unique** across all decks. |
 | `title` | yes      | Non-blank, **≤ 60 chars**. Shown in the home list and as the deck heading. |
 | `cards` | yes      | Non-empty array. Each card is `{ "front": <string>, "back": <string> }`. |
 | `front` / `back` | yes | Non-blank, **≤ 200 chars each**. Keep them short so they stay readable on a phone. |
+| `id`    | **no** — do not add it | The filename is the id; an `id` field is rejected. |
 | `order` | **no** — do not set it | Controls the deck's position in the home list. The maintainer assigns it at merge time; you can't know how your deck should sort relative to the existing ones, so leave it out. |
 
 More things to know:

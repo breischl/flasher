@@ -14,19 +14,19 @@ val decksDir = layout.projectDirectory.dir("src/jsMain/resources/decks")
 val generatedResourcesDir = layout.buildDirectory.dir("generated/deckIndex")
 
 /**
- * Validates every deck JSON file against the contract in `docs/deck.schema.json` plus the two
- * cross-file rules a JSON Schema can't express (`id` == filename stem, `id` unique). Enforces the
- * required fields, kebab-case ids, and the max lengths (id 50, title 60, card front/back 200) so a
- * malformed or oversized deck can't slip into the bundle or the generated index. Accumulates all
- * problems and fails with one message listing them. See CONTRIBUTING-DECKS.md.
+ * Validates every deck JSON file against the contract in `docs/deck.schema.json`, plus the
+ * filename rule a JSON Schema can't see: the filename stem is the deck id, so it must be
+ * kebab-case and ≤ 50 chars (id uniqueness is then free — filenames are unique). Enforces the
+ * required fields and max lengths (title 60, card front/back 200) so a malformed or oversized
+ * deck can't slip into the bundle or the generated index. Accumulates all problems and fails
+ * with one message listing them. See CONTRIBUTING-DECKS.md.
  */
 val validateDecks by tasks.registering {
     inputs.dir(decksDir)
     doLast {
         val slurper = JsonSlurper()
-        val idPattern = Regex("^[a-z0-9]+(-[a-z0-9]+)*$")
+        val stemPattern = Regex("^[a-z0-9]+(-[a-z0-9]+)*$")
         val errors = mutableListOf<String>()
-        val idToFiles = mutableMapOf<String, MutableList<String>>()
 
         val files = (decksDir.asFile.listFiles { f -> f.extension == "json" && f.name != "index.json" }
             ?: emptyArray()).sortedBy { it.name }
@@ -36,6 +36,13 @@ val validateDecks by tasks.registering {
         for (file in files) {
             val name = file.name
             val stem = file.nameWithoutExtension
+            // The filename IS the deck id, so validate the stem. (Uniqueness is free: the filesystem
+            // guarantees distinct filenames, hence distinct ids.)
+            when {
+                stem.length > 50 -> err(name, "filename stem must be at most 50 characters (it is the deck id)")
+                !stemPattern.matches(stem) -> err(name, "filename must be kebab-case (lowercase letters, digits, hyphens): \"$name\"")
+            }
+
             val parsed = try {
                 slurper.parse(file)
             } catch (e: Exception) {
@@ -48,14 +55,7 @@ val validateDecks by tasks.registering {
                 continue
             }
 
-            val id = obj["id"]
-            when {
-                id !is String || id.isBlank() -> err(name, "`id` is required and must be a non-blank string")
-                id.length > 50 -> err(name, "`id` must be at most 50 characters")
-                !idPattern.matches(id) -> err(name, "`id` must be kebab-case (lowercase letters, digits, hyphens): \"$id\"")
-                id != stem -> err(name, "`id` (\"$id\") must equal the filename stem (\"$stem\")")
-                else -> idToFiles.getOrPut(id) { mutableListOf() }.add(name)
-            }
+            if (obj.containsKey("id")) err(name, "remove the `id` field — the filename is the deck id")
 
             val title = obj["title"]
             when {
@@ -89,10 +89,6 @@ val validateDecks by tasks.registering {
             }
         }
 
-        idToFiles.filterValues { it.size > 1 }.forEach { (id, dupes) ->
-            errors.add("duplicate `id` \"$id\" used by: ${dupes.joinToString(", ")}")
-        }
-
         if (errors.isNotEmpty()) {
             throw GradleException(
                 "Deck validation failed (${errors.size} problem(s)); see CONTRIBUTING-DECKS.md:\n" +
@@ -123,9 +119,9 @@ val generateDeckIndex by tasks.registering {
                 Triple(order, file.name, obj)
             }
             .sortedWith(compareBy({ it.first }, { it.second }))
-            .map { (_, _, obj) ->
+            .map { (_, fileName, obj) ->
                 mapOf(
-                    "id" to obj["id"],
+                    "id" to fileName.removeSuffix(".json"),
                     "title" to obj["title"],
                     "cardCount" to (obj["cards"] as List<*>).size,
                 )

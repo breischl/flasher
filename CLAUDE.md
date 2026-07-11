@@ -30,8 +30,10 @@ swapped without touching logic (design goal: "graduate" to a richer renderer lat
   unit-tested), and the `Renderer` / `SessionStore` / `DeckRepository` seams.
 - `jsMain`: `DomRenderer` (kotlinx.html), `InputHandler` (keys + swipe), `LocalStorageStore`,
   `JsonDeckRepository` (fetches `decks/*.json`). `main()` wires it all together.
-- Decks are bundled JSON under `src/jsMain/resources/decks/`; each file has `id` (= filename stem),
-  `title`, `order`, and `cards`. Adding a deck needs no code change.
+- Decks are bundled JSON under `src/jsMain/resources/decks/`; each file has `title`, `order`, and
+  `cards` — the **deck id is the filename stem** (not a field in the file). `JsonDeckRepository`
+  decodes a `DeckFile` DTO (title+cards) and supplies `id` from the fetch key; `Deck`/`DeckSummary`
+  still carry `id` as a domain field. Adding a deck needs no code change.
 - **Lazy loading**: `DeckRepository` has `loadIndex()` (fetched once at startup → the home list of
   `DeckSummary`) and `loadDeck(id)` (fetched only when a deck is opened/resumed, then memoized).
   `selectDeck`/`resume` on the controller are `suspend`; `DomRenderer` launches selection on an
@@ -43,12 +45,12 @@ swapped without touching logic (design goal: "graduate" to a richer renderer lat
 - Navigation is wrap-free (past the last card → Complete screen). Persistence stores
   `{deckId, naturalIndex}` (shuffle-independent); shuffle state is NOT persisted.
 - **Deck validation**: `validateDecks` (a Groovy task in `build.gradle.kts`, no deps) checks every
-  deck file — required fields, kebab-case `id`, `id` == filename stem, `id` uniqueness, max lengths
-  (id 50 / title 60 / card front,back 200), non-empty cards. It's a `dependsOn` of `generateDeckIndex`
-  and of `check`, so a bad deck fails the build/CI/publish instead of shipping. The authoring contract
-  for outside contributors is `CONTRIBUTING-DECKS.md` + the machine-readable `docs/deck.schema.json`
-  (kept in sync with the task by hand); submissions come in via GitHub Discussions. Note `order` is
-  maintainer-assigned — contributors are told not to set it.
+  deck file — kebab-case filename stem (≤50; it's the id, so uniqueness is free), no stray `id`
+  field, required `title` (≤60), non-empty `cards` with non-blank `front`/`back` (≤200). It's a
+  `dependsOn` of `generateDeckIndex` and of `check`, so a bad deck fails the build/CI/publish instead
+  of shipping. The authoring contract for outside contributors is `CONTRIBUTING-DECKS.md` + the
+  machine-readable `docs/deck.schema.json` (kept in sync with the task by hand); submissions come in
+  via GitHub Discussions. Note `order` is maintainer-assigned — contributors are told not to set it.
 
 ## Testing convention
 

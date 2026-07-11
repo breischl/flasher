@@ -9,8 +9,12 @@ data class Card(
     val back: String,
 )
 
-/** A named collection of cards the user studies as a unit. */
-@Serializable
+/**
+ * A named collection of cards the user studies as a unit. [id] is the deck's stable identity
+ * (its filename stem for bundled decks); it is not stored inside the deck's own JSON. Not
+ * `@Serializable` on purpose — decks are decoded via [flasher.JsonDeckRepository]'s file DTO,
+ * which supplies [id] from the filename.
+ */
 data class Deck(
     val id: String,
     val title: String,
