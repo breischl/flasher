@@ -1,9 +1,20 @@
 :root {
     color-scheme: light dark;
     font-family: system-ui, -apple-system, sans-serif;
+    -webkit-text-size-adjust: 100%;
     --gap: 1rem;
     --radius: 0.75rem;
     --accent: #3b6ef5;
+    --bg: #ffffff;
+    --fg: #14161a;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --accent: #6b93ff;
+        --bg: #14161a;
+        --fg: #eceef2;
+    }
 }
 
 * {
@@ -12,6 +23,8 @@
 
 body {
     margin: 0;
+    background: var(--bg);
+    color: var(--fg);
 }
 
 #app {
@@ -23,7 +36,8 @@ body {
 .screen {
     width: 100%;
     max-width: 32rem;
-    padding: var(--gap);
+    padding: calc(var(--gap) + env(safe-area-inset-top)) var(--gap)
+             calc(var(--gap) + env(safe-area-inset-bottom));
     display: flex;
     flex-direction: column;
     gap: var(--gap);

@@ -1,0 +1,12 @@
+{
+  "id": "phrases",
+  "title": "Useful Phrases",
+  "cards": [
+    { "front": "How are you?", "back": "¿Cómo estás?" },
+    { "front": "What is your name?", "back": "¿Cómo te llamas?" },
+    { "front": "I don't understand", "back": "No entiendo" },
+    { "front": "Where is the bathroom?", "back": "¿Dónde está el baño?" },
+    { "front": "How much does it cost?", "back": "¿Cuánto cuesta?" },
+    { "front": "See you later", "back": "Hasta luego" }
+  ]
+}

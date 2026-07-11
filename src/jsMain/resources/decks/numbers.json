@@ -1,0 +1,16 @@
+{
+  "id": "numbers",
+  "title": "Numbers 1–10",
+  "cards": [
+    { "front": "one", "back": "uno" },
+    { "front": "two", "back": "dos" },
+    { "front": "three", "back": "tres" },
+    { "front": "four", "back": "cuatro" },
+    { "front": "five", "back": "cinco" },
+    { "front": "six", "back": "seis" },
+    { "front": "seven", "back": "siete" },
+    { "front": "eight", "back": "ocho" },
+    { "front": "nine", "back": "nueve" },
+    { "front": "ten", "back": "diez" }
+  ]
+}
