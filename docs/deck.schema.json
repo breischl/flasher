@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://breischl.dev/apps/flasher/deck.schema.json",
   "title": "Flasher deck",
-  "description": "A single Flasher deck file, saved as src/jsMain/resources/decks/<name>.json. The filename stem (kebab-case, e.g. at-the-restaurant.json) is the deck's id — it is NOT a field in this file. Full authoring guide: https://github.com/breischl/flasher/blob/main/CONTRIBUTING-DECKS.md",
+  "description": "A single Flasher deck file. Full authoring guide: https://github.com/breischl/flasher/blob/main/CONTRIBUTING-DECKS.md",
   "type": "object",
   "additionalProperties": false,
   "required": ["title", "cards"],
@@ -15,7 +15,7 @@
     },
     "order": {
       "type": "integer",
-      "description": "Do NOT set this when contributing a deck. It controls the deck's position in the home list and is assigned by the maintainer at merge time."
+      "description": "Do not set this when contributing a deck. It controls the deck's position in the home list and is assigned by the maintainer at merge time."
     },
     "cards": {
       "type": "array",
