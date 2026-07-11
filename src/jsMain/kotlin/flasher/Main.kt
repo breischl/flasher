@@ -9,7 +9,10 @@ import org.w3c.dom.HTMLElement
 fun main() {
     val root = document.getElementById("app") as? HTMLElement ?: return
 
-    MainScope().launch {
+    // A long-lived scope for the whole app session: it must outlive this startup coroutine so that
+    // deck selection (launched from click handlers) still runs after main() has returned.
+    val appScope = MainScope()
+    appScope.launch {
         val repo = JsonDeckRepository()
         val index = runCatching { repo.loadIndex() }
             .getOrElse { error ->
@@ -18,7 +21,7 @@ fun main() {
             }
 
         val store = LocalStorageStore()
-        val renderer = DomRenderer(root, scope = this)
+        val renderer = DomRenderer(root, scope = appScope)
         val controller = FlashcardController(
             index,
             loadDeck = repo::loadDeck,

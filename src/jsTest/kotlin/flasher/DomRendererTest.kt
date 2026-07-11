@@ -1,6 +1,10 @@
 package flasher
 
 import kotlinx.browser.document
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.promise
 import org.w3c.dom.HTMLElement
 import kotlin.test.AfterTest
 import kotlin.test.Test
@@ -74,6 +78,37 @@ class DomRendererTest {
         root.click(".toggle")
         assertTrue(controller.state.shuffleOn)
         assertContains(root.textContent!!, "Shuffle: On")
+    }
+
+    /**
+     * Regression guard for the wiring bug where the renderer was handed the startup coroutine's own
+     * scope: once that coroutine completed, deck-selection launches fired into a dead scope and did
+     * nothing. Mirrors main() — set everything up inside a startup coroutine on a long-lived
+     * app-scope, let it finish, then click a deck and confirm it still loads.
+     */
+    @Test
+    fun deckClickLoadsDeckAfterStartupCoroutineCompletes() = MainScope().promise {
+        val root = document.createElement("div") as HTMLElement
+        document.body!!.appendChild(root)
+        mounted += root
+
+        val appScope = MainScope()
+        lateinit var controller: FlashcardController
+        appScope.launch {
+            val renderer = DomRenderer(root, scope = appScope)
+            controller = FlashcardController(
+                summariesOf(testDecks),
+                loadDeck = loaderOf(testDecks),
+                onChange = renderer::render,
+            )
+            renderer.bind(controller)
+            controller.resume() // no store -> Home
+        }.join() // startup coroutine has now completed
+
+        (root.querySelector(".deck-item") as HTMLElement).click()
+        delay(50) // let the launched selectDeck coroutine run
+        assertEquals(Screen.DeckOptions, controller.state.screen)
+        assertContains(root.textContent!!, "Greetings")
     }
 
     @Test
