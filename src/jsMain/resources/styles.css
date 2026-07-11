@@ -1,8 +1,98 @@
 :root {
     color-scheme: light dark;
     font-family: system-ui, -apple-system, sans-serif;
+    --gap: 1rem;
+    --radius: 0.75rem;
+    --accent: #3b6ef5;
+}
+
+* {
+    box-sizing: border-box;
 }
 
 body {
     margin: 0;
+}
+
+#app {
+    min-height: 100dvh;
+    display: flex;
+    justify-content: center;
+}
+
+.screen {
+    width: 100%;
+    max-width: 32rem;
+    padding: var(--gap);
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap);
+}
+
+h1 {
+    margin: 0;
+    font-size: 1.75rem;
+}
+
+.muted {
+    opacity: 0.6;
+    margin: 0;
+}
+
+.top-bar {
+    display: flex;
+}
+
+button {
+    font: inherit;
+    cursor: pointer;
+    border: none;
+    border-radius: var(--radius);
+    padding: 0.85rem 1rem;
+    background: color-mix(in srgb, currentColor 8%, transparent);
+    color: inherit;
+}
+
+button:active {
+    transform: translateY(1px);
+}
+
+.link {
+    background: none;
+    padding: 0.35rem 0;
+    opacity: 0.8;
+}
+
+.deck-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.deck-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-align: left;
+    padding: 1rem;
+}
+
+.deck-title {
+    font-weight: 600;
+}
+
+.deck-count {
+    opacity: 0.6;
+    font-size: 0.9rem;
+}
+
+.toggle-on {
+    background: color-mix(in srgb, var(--accent) 25%, transparent);
+}
+
+.primary {
+    background: var(--accent);
+    color: #fff;
+    font-weight: 600;
+    padding: 1rem;
 }
