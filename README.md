@@ -67,8 +67,7 @@ integration uses).
 Decks are plain JSON under `src/jsMain/resources/decks/`:
 
 - `<id>.json` — `{ "title", "order", "cards": [ { "front", "back" }, … ] }`. The **filename stem is
-  the deck id** (no `id` field in the file). `order` is an integer that controls the deck's position
-  in the list.
+  the deck id**. `order` is an integer that controls the deck's position in the list.
 
 Just add a file and rebuild — **`decks/index.json` is generated at build time** (by the
 `generateDeckIndex` Gradle task) from the deck files, so there's no index to hand-maintain. No code
