@@ -1,6 +1,7 @@
 package flasher
 
 import kotlinx.coroutines.await
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.browser.window
 
@@ -19,12 +20,18 @@ class JsonDeckRepository(
     override suspend fun loadIndex(): List<DeckSummary> =
         json.decodeFromString<List<DeckSummary>>(fetchText("$basePath/index.json"))
 
-    override suspend fun loadDeck(id: String): Deck =
-        cache.getOrPut(id) { json.decodeFromString<Deck>(fetchText("$basePath/$id.json")) }
+    override suspend fun loadDeck(id: String): Deck = cache.getOrPut(id) {
+        val file = json.decodeFromString<DeckFile>(fetchText("$basePath/$id.json"))
+        Deck(id = id, title = file.title, cards = file.cards)
+    }
 
     private suspend fun fetchText(path: String): String {
         val response = window.fetch(path).await()
         if (!response.ok) error("Failed to load $path (HTTP ${response.status})")
         return response.text().await()
     }
+
+    /** On-disk shape of a deck file. `id` is not stored — it's the filename stem (the fetch key). */
+    @Serializable
+    private data class DeckFile(val title: String, val cards: List<Card>)
 }
