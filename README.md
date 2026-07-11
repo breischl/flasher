@@ -66,14 +66,11 @@ integration uses).
 
 Decks are plain JSON under `src/jsMain/resources/decks/`:
 
-- `<id>.json` — `{ "title", "order", "cards": [ { "front", "back" }, … ] }`. The **filename stem is
-  the deck id** (no `id` field in the file). `order` is an integer that controls the deck's position
-  in the list.
+- `<deck-id>.json` — `{ "title", "order", "cards": [ { "front", "back" }, … ] }`. `order` is an integer that controls the deck's position in the list.
 
-Just add a file and rebuild — **`decks/index.json` is generated at build time** (by the
-`generateDeckIndex` Gradle task) from the deck files, so there's no index to hand-maintain. No code
-changes or recompile of logic required. Deck files are validated by the `validateDecks` Gradle task
-(wired into `check` and the build), so a malformed deck fails the build rather than shipping broken.
+Just add a file and rebuild — **`decks/index.json` is generated at build time** from the deck files. 
+Deck files are validated by the `validateDecks` Gradle task, so a malformed deck fails the build rather 
+than shipping broken.
 
 **Contributing a deck?** See [`CONTRIBUTING-DECKS.md`](CONTRIBUTING-DECKS.md) for the format, rules,
 and how to submit — the machine-readable contract is [`docs/deck.schema.json`](docs/deck.schema.json).

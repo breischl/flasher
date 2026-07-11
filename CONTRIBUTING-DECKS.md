@@ -30,7 +30,6 @@ Filenames must use use kebab-case (e.g. `food-basics.json`), and be ≤ 50 chara
 | `title` | yes      | Non-blank, **≤ 60 chars**. Shown in the home list and as the deck heading. |
 | `cards` | yes      | Non-empty array. Each card is `{ "front": <string>, "back": <string> }`. |
 | `front` / `back` | yes | Non-blank, **≤ 200 chars each**. Keep them short so they stay readable on a phone. |
-| `id`    | **no** — do not add it | The filename is the id; an `id` field is rejected. |
 | `order` | **no** — do not set it | Controls the deck's position in the home list. The maintainer assigns it at merge time; you can't know how your deck should sort relative to the existing ones, so leave it out. |
 
 - **Plain text only.** HTML and Markdown are *not* supported anywhere.
