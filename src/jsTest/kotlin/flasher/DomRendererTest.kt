@@ -77,6 +77,26 @@ class DomRendererTest {
     }
 
     @Test
+    fun startSideToggleFlipsLabelAndState() {
+        val (root, controller) = mount()
+        root.click(".deck-item")
+        assertContains(root.textContent!!, "Start on: Prompt")
+        // Second toggle button is the "Start on" one (first is Shuffle).
+        (root.querySelectorAll(".toggle").item(1) as HTMLElement).click()
+        assertTrue(controller.state.answerFirst)
+        assertContains(root.textContent!!, "Start on: Answer")
+    }
+
+    @Test
+    fun answerFirstShowsTheAnswerSideOnTheFirstCard() {
+        val (root, _) = mount()
+        root.click(".deck-item") // greetings, card 0 = hello/hola
+        (root.querySelectorAll(".toggle").item(1) as HTMLElement).click() // Start on: Answer
+        root.click(".primary") // Start
+        assertContains(root.textContent!!, "hola")
+    }
+
+    @Test
     fun startMovesIntoStudy() {
         val (root, controller) = mount()
         root.click(".deck-item")

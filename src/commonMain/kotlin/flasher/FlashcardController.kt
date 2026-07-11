@@ -28,13 +28,19 @@ class FlashcardController(
     suspend fun selectDeck(deckId: String) {
         if (index.none { it.id == deckId }) return
         val deck = loadDeck(deckId)
-        update(state.copy(screen = Screen.DeckOptions, currentDeck = deck, shuffleOn = false))
+        update(state.copy(screen = Screen.DeckOptions, currentDeck = deck, shuffleOn = false, answerFirst = false))
     }
 
     /** Toggle shuffle on the options screen. */
     fun toggleShuffle() {
         if (state.screen != Screen.DeckOptions) return
         update(state.copy(shuffleOn = !state.shuffleOn))
+    }
+
+    /** Toggle which face shows first (prompt vs answer) on the options screen. */
+    fun toggleAnswerFirst() {
+        if (state.screen != Screen.DeckOptions) return
+        update(state.copy(answerFirst = !state.answerFirst))
     }
 
     /** Begin studying the selected deck. */
@@ -48,7 +54,7 @@ class FlashcardController(
             store?.clear()
             return
         }
-        update(state.copy(screen = Screen.Study, order = order, position = 0, isFlipped = false))
+        update(state.copy(screen = Screen.Study, order = order, position = 0, isFlipped = state.answerFirst))
         saveCurrent()
     }
 
@@ -66,7 +72,7 @@ class FlashcardController(
             store?.clear()
             return
         }
-        update(state.copy(position = state.position + 1, isFlipped = false))
+        update(state.copy(position = state.position + 1, isFlipped = state.answerFirst))
         saveCurrent()
     }
 
@@ -74,7 +80,7 @@ class FlashcardController(
     fun prev() {
         if (state.screen != Screen.Study) return
         if (state.position == 0) return
-        update(state.copy(position = state.position - 1, isFlipped = false))
+        update(state.copy(position = state.position - 1, isFlipped = state.answerFirst))
         saveCurrent()
     }
 
@@ -98,6 +104,7 @@ class FlashcardController(
                 position = saved.naturalIndex,
                 isFlipped = false,
                 shuffleOn = false,
+                answerFirst = false,
             ),
         )
     }

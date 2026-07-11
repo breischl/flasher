@@ -7,7 +7,7 @@ Kotlin Multiplatform and compiled to JavaScript.
 
 ## Features
 
-- Deck list → per-deck options (shuffle) → study → deck-complete flow
+- Deck list → per-deck options (shuffle, and which side shows first) → study → deck-complete flow
 - Tap to flip; Prev/Next buttons, swipe gestures, and arrow keys
 - Remembers where you left off (localStorage) and drops you back into that card
 - No images; pure CSS, adapts to light/dark, sized for phones

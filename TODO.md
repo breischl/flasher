@@ -7,8 +7,6 @@ Nothing here is required — the app is complete and deployed. These are deliber
 
 - **Mastery tracking** — mark cards "known" vs "still learning" per deck; surface a study subset.
 - **In-app deck editing** — currently decks are bundled JSON only; no create/edit UI.
-- **"Which side first"** option — per-deck choice of prompt vs answer as the starting face. The
-  DeckOptions screen is the intended home for this (alongside the existing Shuffle toggle).
 - **Persist shuffle** — shuffle state/order is intentionally not saved across sessions today.
 
 ## Minor follow-ups

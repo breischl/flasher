@@ -18,6 +18,7 @@ data class AppState(
     val position: Int = 0,
     val isFlipped: Boolean = false,
     val shuffleOn: Boolean = false,
+    val answerFirst: Boolean = false,
 ) {
     /** Number of cards in the deck being studied. */
     val total: Int get() = order.size

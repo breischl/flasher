@@ -105,6 +105,53 @@ class FlashcardControllerTest {
     }
 
     @Test
+    fun toggleAnswerFirstFlipsTheFlagOnOptionsOnly() = runTest {
+        val c = controller()
+        c.toggleAnswerFirst() // on Home — no-op
+        assertFalse(c.state.answerFirst)
+        c.selectDeck("greetings")
+        c.toggleAnswerFirst()
+        assertTrue(c.state.answerFirst)
+        c.toggleAnswerFirst()
+        assertFalse(c.state.answerFirst)
+    }
+
+    @Test
+    fun selectDeckResetsAnswerFirst() = runTest {
+        val c = controller()
+        c.selectDeck("greetings")
+        c.toggleAnswerFirst()
+        assertTrue(c.state.answerFirst)
+        c.goHome()
+        c.selectDeck("colors")
+        assertFalse(c.state.answerFirst)
+    }
+
+    @Test
+    fun startWithAnswerFirstBeginsOnTheAnswerSide() = runTest {
+        val c = controller()
+        c.selectDeck("greetings")
+        c.toggleAnswerFirst()
+        c.start()
+        assertTrue(c.state.isFlipped)
+    }
+
+    @Test
+    fun nextAndPrevResetToTheChosenStartingSide() = runTest {
+        val c = controller()
+        c.selectDeck("greetings")
+        c.toggleAnswerFirst()
+        c.start()
+        c.flip() // now showing prompt
+        assertFalse(c.state.isFlipped)
+        c.next() // resets to answer-first
+        assertTrue(c.state.isFlipped)
+        c.flip()
+        c.prev()
+        assertTrue(c.state.isFlipped)
+    }
+
+    @Test
     fun flipTogglesTheCard() = runTest {
         val c = controller()
         c.selectDeck("greetings")

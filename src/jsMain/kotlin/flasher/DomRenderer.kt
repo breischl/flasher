@@ -72,6 +72,11 @@ class DomRenderer(
             +"Shuffle: ${if (state.shuffleOn) "On" else "Off"}"
         }
 
+        button(classes = "toggle ${if (state.answerFirst) "toggle-on" else ""}".trim()) {
+            onClickFunction = { controller.toggleAnswerFirst() }
+            +"Start on: ${if (state.answerFirst) "Answer" else "Prompt"}"
+        }
+
         button(classes = "primary") {
             onClickFunction = { controller.start() }
             +"Start"
