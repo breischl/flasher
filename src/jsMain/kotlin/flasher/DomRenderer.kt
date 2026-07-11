@@ -64,8 +64,8 @@ class DomRenderer(
                 }
             }
         }
-        // Point would-be contributors at the deck-submission flow (opens GitHub Discussions).
-        a(href = "https://github.com/breischl/flasher/discussions", classes = "link contribute-link") {
+        // Point would-be contributors at the deck-authoring guide (hosted on GitHub; not bundled).
+        a(href = "https://github.com/breischl/flasher/blob/main/CONTRIBUTING-DECKS.md", classes = "link contribute-link") {
             attributes["target"] = "_blank"
             attributes["rel"] = "noopener"
             +"Contribute a deck →"
