@@ -153,13 +153,18 @@ class DomRendererTest {
     }
 
     @Test
-    fun studyShowsPromptThenAnswerOnTap() {
-        val (root, _) = mount()
+    fun tappingRevealsTheAnswerThenAdvancesToTheNextCard() {
+        val (root, controller) = mount()
         root.startFirstDeck() // greetings, card 0 = hello/hola
         assertContains(root.textContent!!, "hello")
         assertContains(root.textContent!!, "1 / 2")
-        root.click(".card")
+        root.click(".card") // reveal
         assertContains(root.textContent!!, "hola")
+        assertEquals(0, controller.state.position)
+        root.click(".card") // advance — not flip back
+        assertEquals(1, controller.state.position)
+        assertContains(root.textContent!!, "bye")
+        assertContains(root.textContent!!, "2 / 2")
     }
 
     @Test

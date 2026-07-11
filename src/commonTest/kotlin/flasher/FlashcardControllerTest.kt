@@ -163,6 +163,57 @@ class FlashcardControllerTest {
     }
 
     @Test
+    fun flipOrAdvanceRevealsThenMovesToNextCard() = runTest {
+        val c = controller()
+        c.selectDeck("greetings")
+        c.start()
+        assertEquals("hello", c.state.currentCard?.front)
+        assertFalse(c.state.isFlipped)
+        c.flipOrAdvance() // on starting face -> reveal
+        assertTrue(c.state.isFlipped)
+        assertEquals(0, c.state.position)
+        c.flipOrAdvance() // revealed -> advance
+        assertEquals(1, c.state.position)
+        assertFalse(c.state.isFlipped) // back to the starting face
+        assertEquals("goodbye", c.state.currentCard?.front)
+    }
+
+    @Test
+    fun flipOrAdvanceWalksTheWholeDeckToCompletion() = runTest {
+        val c = controller()
+        c.selectDeck("colors") // 2 cards
+        c.start()
+        c.flipOrAdvance() // reveal card 0
+        c.flipOrAdvance() // -> card 1
+        assertEquals(1, c.state.position)
+        c.flipOrAdvance() // reveal card 1
+        c.flipOrAdvance() // past the last card -> Complete
+        assertEquals(Screen.Complete, c.state.screen)
+    }
+
+    @Test
+    fun flipOrAdvanceRespectsAnswerFirst() = runTest {
+        val c = controller()
+        c.selectDeck("greetings")
+        c.toggleAnswerFirst()
+        c.start()
+        assertTrue(c.state.isFlipped) // starts on the answer face
+        c.flipOrAdvance() // reveal the prompt
+        assertFalse(c.state.isFlipped)
+        assertEquals(0, c.state.position)
+        c.flipOrAdvance() // revealed -> advance, reset to answer face
+        assertEquals(1, c.state.position)
+        assertTrue(c.state.isFlipped)
+    }
+
+    @Test
+    fun flipOrAdvanceIsIgnoredOutsideStudy() = runTest {
+        val c = controller()
+        c.flipOrAdvance()
+        assertEquals(Screen.Home, c.state.screen)
+    }
+
+    @Test
     fun nextAdvancesAndResetsFlip() = runTest {
         val c = controller()
         c.selectDeck("greetings")

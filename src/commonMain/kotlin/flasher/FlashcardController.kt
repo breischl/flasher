@@ -64,6 +64,17 @@ class FlashcardController(
         update(state.copy(isFlipped = !state.isFlipped))
     }
 
+    /**
+     * The primary progress gesture (tap / click / Space / Enter): reveal the hidden side if the
+     * card is still on its starting face, otherwise advance to the next card. Repeating this one
+     * gesture walks the whole deck — reveal, next, reveal, next…
+     */
+    fun flipOrAdvance() {
+        if (state.screen != Screen.Study) return
+        // isFlipped == answerFirst means we're on the card's starting face (nothing revealed yet).
+        if (state.isFlipped == state.answerFirst) flip() else next()
+    }
+
     /** Advance to the next card, or finish the deck. */
     fun next() {
         if (state.screen != Screen.Study) return

@@ -10,7 +10,7 @@ import kotlin.math.abs
  * Attaches to an [EventTarget] (the window in the app) so it can be pointed at a test root.
  *
  * - ArrowLeft / ArrowRight → prev / next
- * - Space / Enter → flip
+ * - Space / Enter → reveal the hidden side, or advance once revealed (the one-gesture walk)
  * - horizontal swipe → prev / next
  */
 class InputHandler(
@@ -32,7 +32,7 @@ class InputHandler(
         when (event.key) {
             "ArrowLeft" -> controller.prev()
             "ArrowRight" -> controller.next()
-            " ", "Spacebar", "Enter" -> controller.flip()
+            " ", "Spacebar", "Enter" -> controller.flipOrAdvance()
             else -> return
         }
         event.preventDefault()

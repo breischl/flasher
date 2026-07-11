@@ -66,11 +66,15 @@ class InputHandlerTest {
     }
 
     @Test
-    fun spaceFlipsTheCard() {
+    fun spaceRevealsThenAdvances() {
         val (root, controller) = mountStudying()
         assertTrue(!controller.state.isFlipped)
-        root.key(" ")
+        root.key(" ") // reveal
         assertTrue(controller.state.isFlipped)
+        assertEquals(0, controller.state.position)
+        root.key(" ") // advance
+        assertEquals(1, controller.state.position)
+        assertTrue(!controller.state.isFlipped) // back on the starting face
     }
 
     @Test

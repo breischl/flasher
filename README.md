@@ -8,7 +8,8 @@ Kotlin Multiplatform and compiled to JavaScript.
 ## Features
 
 - Deck list → per-deck options (shuffle, and which side shows first) → study → deck-complete flow
-- Tap to flip; Prev/Next buttons, swipe gestures, and arrow keys
+- One-gesture walk: tap/click (or Space/Enter) reveals the card, then the same gesture advances —
+  step through a whole deck without switching gestures. Prev/Next buttons, swipe, and arrow keys too
 - Remembers where you left off (localStorage) and drops you back into that card
 - No images; pure CSS, adapts to light/dark, sized for phones
 

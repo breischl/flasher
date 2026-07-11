@@ -94,10 +94,12 @@ class DomRenderer(
         }
 
         div("card ${if (state.isFlipped) "is-back" else "is-front"}") {
-            onClickFunction = { controller.flip() }
+            onClickFunction = { controller.flipOrAdvance() }
             span("card-side") { +if (state.isFlipped) "answer" else "prompt" }
             span("card-text") { +if (state.isFlipped) card.back else card.front }
-            span("card-hint muted") { +"tap to flip" }
+            // On the starting face the gesture reveals; once revealed, the same gesture advances.
+            val revealed = state.isFlipped != state.answerFirst
+            span("card-hint muted") { +if (revealed) "tap for next" else "tap to flip" }
         }
 
         div("nav") {
