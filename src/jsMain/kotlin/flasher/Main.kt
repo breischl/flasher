@@ -20,6 +20,7 @@ fun main() {
         val renderer = DomRenderer(root)
         val controller = FlashcardController(decks, store = store, onChange = renderer::render)
         renderer.bind(controller)
+        InputHandler(controller).attach(window)
 
         // Expose for manual driving from the browser console during early development.
         window.asDynamic().flasher = controller
