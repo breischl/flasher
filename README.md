@@ -45,6 +45,22 @@ The self-contained bundle is written to `build/dist/js/productionExecutable/`
 cd build/dist/js/productionExecutable && python3 -m http.server 8000
 ```
 
+## Publishing
+
+The app is deployed to **https://breischl.dev/apps/flasher/** by the
+[`Publish`](.github/workflows/publish.yml) GitHub Actions workflow, which runs on every push to
+`main` (and can be run manually via *Run workflow*). It builds the production distribution and
+copies it into the [`breischl/breischl.github.io`](https://github.com/breischl/breischl.github.io)
+Hugo site at `static/apps/flasher/`, then commits and pushes — which triggers that site's own
+deploy to GitHub Pages.
+
+The app ships as plain static files served verbatim (no Hugo theme wrapping); its relative asset
+and `decks/` paths let it run from that subpath unchanged.
+
+**Required secret:** the workflow needs the repository secret `BREISCHL_DEV_REPO_ACCESS_TOKEN` — a
+GitHub token with `contents: write` on the `breischl.github.io` repo (the same PAT the keneth site
+integration uses).
+
 ## Adding or editing decks
 
 Decks are plain JSON under `src/jsMain/resources/decks/`:
