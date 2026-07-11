@@ -1,0 +1,10 @@
+{
+  "id": "colors",
+  "title": "Colors",
+  "cards": [
+    { "front": "red", "back": "rojo" },
+    { "front": "blue", "back": "azul" },
+    { "front": "green", "back": "verde" },
+    { "front": "yellow", "back": "amarillo" }
+  ]
+}
