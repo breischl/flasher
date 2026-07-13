@@ -11,6 +11,8 @@ Kotlin Multiplatform and compiled to JavaScript.
 - One-gesture walk: tap/click (or Space/Enter) reveals the card, then the same gesture advances —
   step through a whole deck without switching gestures. Prev/Next buttons, swipe, and arrow keys too
 - Remembers where you left off (localStorage) and drops you back into that card
+- **Works offline** — a service worker caches the app and every deck, so after the first visit it
+  keeps working with no connection (e.g. on a plane) and survives reloads
 - No images; pure CSS, adapts to light/dark, sized for phones
 
 ## Requirements
@@ -39,8 +41,8 @@ Domain logic and the browser UI are covered by unit + Karma/Chrome browser tests
 ```
 
 The self-contained bundle is written to `build/dist/js/productionExecutable/`
-(`index.html`, `flasher.js`, `styles.css`, `decks/`). Serve that directory from any static host
-(GitHub Pages, Netlify, S3, …). To try it locally:
+(`index.html`, `flasher.js`, `styles.css`, `decks/`, plus `sw.js`/`sw-version.js` for offline).
+Serve that directory from any static host (GitHub Pages, Netlify, S3, …). To try it locally:
 
 ```sh
 cd build/dist/js/productionExecutable && python3 -m http.server 8000
@@ -76,7 +78,9 @@ than shipping broken.
 and how to submit — the machine-readable contract is [`docs/deck.schema.json`](docs/deck.schema.json).
 
 Decks load **lazily**: only the generated index (deck titles + card counts) is fetched at startup;
-a deck's cards are fetched the first time you open it, then cached.
+a deck's cards are fetched the first time you open it, then cached. (The offline service worker
+separately precaches *all* decks in the background, so lazy loading keeps first paint light while
+the service worker makes everything available offline — the two are complementary.)
 
 ## Architecture
 
