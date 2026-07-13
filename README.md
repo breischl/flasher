@@ -84,6 +84,9 @@ the service worker makes everything available offline — the two are complement
 
 ## Architecture
 
+The behavioral contract — what the app must do, as numbered requirements — is
+[`docs/REQUIREMENTS.md`](docs/REQUIREMENTS.md); update it when user-visible behavior changes.
+
 The domain is pure Kotlin in `commonMain` and knows nothing about the browser, so the UI can be
 swapped without touching the logic:
 

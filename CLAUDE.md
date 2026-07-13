@@ -3,6 +3,9 @@
 A mobile-first flashcard webapp: Kotlin Multiplatform compiled to JS, deployed as a static site.
 Start with `README.md` for the user-facing overview. This file captures the non-obvious things.
 
+**The behavioral contract is `docs/REQUIREMENTS.md`** — consult it before changing behavior, and
+update it in the same commit when adding or changing user-visible behavior.
+
 ## Toolchain quirks (important)
 
 - **Java 22 is pinned** via `.java-version` (jenv). Do NOT run the build on Java 25 — Gradle can't
