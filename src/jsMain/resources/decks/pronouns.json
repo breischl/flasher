@@ -1,0 +1,19 @@
+{
+  "title": "Pronouns",
+  "order": 115,
+  "cards": [
+    { "front": "I", "back": "io (EE-oh)" },
+    { "front": "you (informal)", "back": "tu (too)" },
+    { "front": "he", "back": "lui (LOO-ee)" },
+    { "front": "she", "back": "lei (LAY)" },
+    { "front": "you (formal)", "back": "Lei (LAY)" },
+    { "front": "we", "back": "noi (NOH-ee)" },
+    { "front": "you (plural)", "back": "voi (VOH-ee)" },
+    { "front": "they", "back": "loro (LOH-roh)" },
+    { "front": "me (direct object)", "back": "mi (mee)" },
+    { "front": "you (direct object, informal)", "back": "ti (tee)" },
+    { "front": "us (direct object)", "back": "ci (chee)" },
+    { "front": "them (direct object)", "back": "li / le (lee / leh)" },
+    { "front": "with me / with you (after a preposition)", "back": "con me / con te (kohn meh / kohn teh)" }
+  ]
+}

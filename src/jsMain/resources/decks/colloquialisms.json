@@ -1,0 +1,14 @@
+{
+  "title": "Colloquialisms",
+  "order": 160,
+  "cards": [
+    { "front": "Good luck! (and the traditional reply)", "back": "In bocca al lupo! — Crepi (il lupo)! (lit. \"Into the wolf's mouth!\" — \"May the wolf die!\")" },
+    { "front": "Quick and easy; done in no time", "back": "Cotto e mangiato (lit. \"cooked and eaten\")" },
+    { "front": "A very kind, good-hearted person", "back": "Un pezzo di pane (lit. \"a piece of bread\")" },
+    { "front": "To give up / throw in the towel", "back": "Mollare il colpo (lit. \"to release the blow\")" },
+    { "front": "What a pain! / How annoying!", "back": "Che palle! (lit. \"What balls!\")" },
+    { "front": "I can't wait", "back": "Non vedo l'ora (lit. \"I don't see the hour\")" },
+    { "front": "Keep it secret! / Mum's the word", "back": "Acqua in bocca! (lit. \"Water in the mouth!\")" },
+    { "front": "To cost a fortune / an arm and a leg", "back": "Costare un occhio della testa (lit. \"to cost an eye from the head\")" }
+  ]
+}
