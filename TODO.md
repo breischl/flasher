@@ -4,6 +4,8 @@ Nothing here is required. These are deliberately deferred features and minor fol
 
 ## Deferred features
 
+- **Smaller JS bundle download** - It's currently rather large for the actual functionality.
+- **Generate stable requirements/spec doc** - To guide future development
 - **Mastery tracking** — mark cards "known" vs "still learning" per deck; surface a study subset.
 - **Persist shuffle** — shuffle state/order is intentionally not saved across sessions today.
 
