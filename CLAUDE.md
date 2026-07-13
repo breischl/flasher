@@ -37,13 +37,24 @@ swapped without touching logic (design goal: "graduate" to a richer renderer lat
 - **Lazy loading**: `DeckRepository` has `loadIndex()` (fetched once at startup → the home list of
   `DeckSummary`) and `loadDeck(id)` (fetched only when a deck is opened/resumed, then memoized).
   `selectDeck`/`resume` on the controller are `suspend`; `DomRenderer` launches selection on an
-  injected `CoroutineScope`.
+  injected `CoroutineScope`. Note the offline service worker (see the Offline bullet below)
+  precaches *all* decks in the background, so lazy loading governs first-paint on the critical path
+  while the SW handles offline durability — complementary, not redundant; nothing to remove here.
 - **Generated index**: `decks/index.json` is NOT checked in — the `generateDeckIndex` Gradle task
   (in `build.gradle.kts`, uses `groovy.json.JsonSlurper`) reads the deck files, sorts by `order`,
   and writes `{id,title,cardCount}` into `build/generated/deckIndex/decks/`, which is wired into the
   jsMain resources and made a `dependsOn` of `jsProcessResources`.
 - Navigation is wrap-free (past the last card → Complete screen). Persistence stores
   `{deckId, naturalIndex}` (shuffle-independent); shuffle state is NOT persisted.
+- **Offline**: a service worker (`src/jsMain/resources/sw.js`) precaches the app + all decks so it
+  works with no connection (e.g. on a plane) and survives reloads/tab eviction. It uses **two
+  independently-versioned caches** — shell (`index.html`/`flasher.js`/`styles.css`) and decks — so a
+  deck edit does NOT re-download the ~800 KB bundle, and vice-versa. Versions are build-injected
+  hashes of each bucket's source inputs, emitted to `sw-version.js` by the `generateSwVersion` task
+  (a `dependsOn` of `jsProcessResources`); no manual version bumping. `flasher.js` keeps its stable
+  filename — precache uses `fetch({cache:'reload'})` to avoid a stale HTTP-cached bundle.
+  Registration (`Main.kt`) is **gated to production** via webpack's `NODE_ENV`, so the dev server
+  never caches stale assets. No installable-PWA polish (manifest/icons) — deliberately out of scope.
 - **Deck validation**: `validateDecks` (a Groovy task in `build.gradle.kts`, no deps) checks every
   deck file — kebab-case filename stem (≤50; it's the id, so uniqueness is free), no stray `id`
   field, required `title` (≤60), non-empty `cards` with non-blank `front`/`back` (≤200). It's a

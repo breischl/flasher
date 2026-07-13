@@ -1,5 +1,6 @@
 import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
+import java.security.MessageDigest
 
 plugins {
     kotlin("multiplatform") version "2.4.0"
@@ -12,6 +13,8 @@ repositories {
 
 val decksDir = layout.projectDirectory.dir("src/jsMain/resources/decks")
 val generatedResourcesDir = layout.buildDirectory.dir("generated/deckIndex")
+val swVersionDir = layout.buildDirectory.dir("generated/swVersion")
+val jsResourcesDir = layout.projectDirectory.dir("src/jsMain/resources")
 
 /**
  * Validates every deck JSON file against the contract in `docs/deck.schema.json`, plus the
@@ -133,6 +136,52 @@ val generateDeckIndex by tasks.registering {
     }
 }
 
+/**
+ * Emits `sw-version.js` for the service worker (`sw.js`). It defines two cache versions —
+ * `__CODE_VERSION` (a hash of the code/shell inputs) and `__CONTENT_VERSION` (a hash of the deck
+ * JSON) — so a deploy invalidates only the bucket whose inputs actually changed: editing a deck
+ * does not force users to re-download the ~800 KB bundle, and vice-versa. Hashes are over the
+ * source inputs (the built bundle isn't available at resource-processing time), the same tradeoff
+ * `generateDeckIndex` makes; a pure toolchain bump outside these files is the one edge that would
+ * need a manual touch. Output lands next to `sw.js` in the dist via the resources wiring below.
+ */
+val generateSwVersion by tasks.registering {
+    // Code/shell inputs: all Kotlin sources plus the static shell assets and the build script
+    // (which carries dependency versions). The deck files feed the content hash instead.
+    val codeInputs = files(
+        fileTree(layout.projectDirectory.dir("src")) { include("**/*.kt") },
+        jsResourcesDir.file("styles.css"),
+        jsResourcesDir.file("index.html"),
+        jsResourcesDir.file("sw.js"),
+        layout.projectDirectory.file("build.gradle.kts"),
+    )
+    val contentInputs = files(
+        fileTree(decksDir) { include("*.json"); exclude("index.json") }
+    )
+    inputs.files(codeInputs).withPropertyName("codeInputs")
+    inputs.files(contentInputs).withPropertyName("contentInputs")
+    outputs.dir(swVersionDir)
+    doLast {
+        fun hash(fileCollection: FileCollection): String {
+            val digest = MessageDigest.getInstance("SHA-256")
+            fileCollection.files.sortedBy { it.absolutePath }.forEach { f ->
+                digest.update(f.name.toByteArray())
+                digest.update(f.readBytes())
+            }
+            return digest.digest().joinToString("") { b -> "%02x".format(b) }.take(12)
+        }
+
+        val codeHash = hash(codeInputs)
+        val contentHash = hash(contentInputs)
+        val outFile = swVersionDir.get().file("sw-version.js").asFile
+        outFile.parentFile.mkdirs()
+        outFile.writeText(
+            "self.__CODE_VERSION = \"$codeHash\";\n" +
+                "self.__CONTENT_VERSION = \"$contentHash\";\n"
+        )
+    }
+}
+
 kotlin {
     js(IR) {
         browser {
@@ -158,6 +207,7 @@ kotlin {
         }
         val jsMain by getting {
             resources.srcDir(generatedResourcesDir)
+            resources.srcDir(swVersionDir)
             dependencies {
                 implementation("org.jetbrains.kotlinx:kotlinx-html-js:0.12.0")
             }
@@ -165,8 +215,8 @@ kotlin {
     }
 }
 
-// The generated index must exist before resources are processed into the bundle.
-tasks.named("jsProcessResources") { dependsOn(generateDeckIndex) }
+// The generated index and service-worker version file must exist before resources are processed.
+tasks.named("jsProcessResources") { dependsOn(generateDeckIndex, generateSwVersion) }
 
 // Validate decks as part of `check` so local test runs and CI catch bad decks.
 tasks.named("check") { dependsOn(validateDecks) }
