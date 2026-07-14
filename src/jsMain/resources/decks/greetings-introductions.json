@@ -13,6 +13,7 @@
     { "front": "My name is...", "back": "Mi chiamo... (mee KYAH-moh)" },
     { "front": "What's your name? (informal)", "back": "Come ti chiami? (KOH-meh tee KYAH-mee)" },
     { "front": "Nice to meet you", "back": "Piacere (pyah-CHEH-reh)" },
-    { "front": "Where are you from?", "back": "Di dove sei? (dee DOH-veh say)" }
+    { "front": "Where are you from?", "back": "Di dove sei? (dee DOH-veh say)" },
+    { "front":  "Can we use the \"tu\" form?", "back": "Possiamo darci del tu?" }
   ]
 }

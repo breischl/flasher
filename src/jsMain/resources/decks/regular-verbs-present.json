@@ -8,7 +8,6 @@
     { "front": "he / she speaks", "back": "lui / lei parla (lwee / lay PAR-lah)" },
     { "front": "we speak", "back": "noi parliamo (noy par-LYAH-moh)" },
     { "front": "you speak (plural)", "back": "voi parlate (voy par-LAH-teh)" },
-    { "front": "they speak", "back": "loro parlano (LOH-roh PAR-lah-noh)" },
     { "front": "to eat", "back": "prendere: io prendo, tu prendi, lui prende (PREHN-doh, -dee, -deh)" },
     { "front": "to sleep", "back": "dormire: io dormo, tu dormi, lui dorme (DOR-moh, -mee, -meh)" }
   ]
