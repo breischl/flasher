@@ -13,6 +13,8 @@
     { "front": "you have (informal sing.)", "back": "tu hai (too eye)" },
     { "front": "he / she has", "back": "lui / lei ha (lwee / lay ah)" },
     { "front": "we have", "back": "noi abbiamo (noy ahb-BYAH-moh)" },
-    { "front": "you have (plural)", "back": "voi avete (voy ah-VEH-teh)" }
+    { "front": "you have (plural)", "back": "voi avete (voy ah-VEH-teh)" },
+    { "front": "there is/there are... (plural)", "back": "ci sono... (chee SO-no)" },
+    { "front": "there is... (singular)", "back": "c'è sono... (chay SI-no) (basically ci è)" }
   ]
 }
