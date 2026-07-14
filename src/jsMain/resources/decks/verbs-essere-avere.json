@@ -1,6 +1,6 @@
 {
   "title": "Verbs: essere & avere",
-  "order": 100,
+  "order": 120,
   "cards": [
     { "front": "to be (infinitive)", "back": "essere (EHS-seh-reh)" },
     { "front": "I am", "back": "io sono (EE-oh SOH-noh)" },
@@ -8,13 +8,11 @@
     { "front": "he / she is", "back": "lui / lei è (lwee / lay eh)" },
     { "front": "we are", "back": "noi siamo (noy SYAH-moh)" },
     { "front": "you are (plural)", "back": "voi siete (voy SYEH-teh)" },
-    { "front": "they are", "back": "loro sono (LOH-roh SOH-noh)" },
     { "front": "to have (infinitive)", "back": "avere (ah-VEH-reh)" },
     { "front": "I have", "back": "io ho (EE-oh oh)" },
     { "front": "you have (informal sing.)", "back": "tu hai (too eye)" },
     { "front": "he / she has", "back": "lui / lei ha (lwee / lay ah)" },
     { "front": "we have", "back": "noi abbiamo (noy ahb-BYAH-moh)" },
-    { "front": "you have (plural)", "back": "voi avete (voy ah-VEH-teh)" },
-    { "front": "they have", "back": "loro hanno (LOH-roh AHN-noh)" }
+    { "front": "you have (plural)", "back": "voi avete (voy ah-VEH-teh)" }
   ]
 }

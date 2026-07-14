@@ -9,6 +9,8 @@
     { "front": "You're welcome", "back": "Prego (PREH-goh)" },
     { "front": "Excuse me (to get by / attention)", "back": "Scusi (SKOO-zee)" },
     { "front": "I'm sorry", "back": "Mi dispiace (mee dee-SPYAH-cheh)" },
+    { "front": "I would like...", "back": "Vorrei... (voh-ray)" },
+    { "front": "Could I/May I... ?", "back": "Potrei... (poh-TRAY)" },
     { "front": "Help!", "back": "Aiuto! (ah-YOO-toh)" },
     { "front": "I don't understand", "back": "Non capisco (nohn kah-PEE-skoh)" },
     { "front": "Do you speak English?", "back": "Parla inglese? (PAR-lah een-GLEH-zeh)" },

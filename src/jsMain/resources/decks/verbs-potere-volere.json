@@ -1,0 +1,18 @@
+{
+  "title": "Verbs: potere & volere",
+  "order": 150,
+  "cards": [
+    { "front": "to be able to / can (infinitive)", "back": "potere (poh-TEH-reh)" },
+    { "front": "I can", "back": "io posso (EE-oh POHS-soh)" },
+    { "front": "you can (informal sing.)", "back": "tu puoi (too PWOY)" },
+    { "front": "he / she can", "back": "lui / lei può (lwee / lay pwoh)" },
+    { "front": "we can", "back": "noi possiamo (noy pohs-SYAH-moh)" },
+    { "front": "you can (plural)", "back": "voi potete (voy poh-TEH-teh)" },
+    { "front": "to want (infinitive)", "back": "volere (voh-LEH-reh)" },
+    { "front": "I want", "back": "io voglio (EE-oh VOH-lyoh)" },
+    { "front": "you want (informal sing.)", "back": "tu vuoi (too VWOY)" },
+    { "front": "he / she wants", "back": "lui / lei vuole (lwee / lay VWOH-leh)" },
+    { "front": "we want", "back": "noi vogliamo (noy voh-LYAH-moh)" },
+    { "front": "you want (plural)", "back": "voi volete (voy voh-LEH-teh)" }
+  ]
+}

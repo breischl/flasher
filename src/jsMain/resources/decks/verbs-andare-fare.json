@@ -1,6 +1,6 @@
 {
   "title": "Verbs: andare & fare",
-  "order": 110,
+  "order": 130,
   "cards": [
     { "front": "to go (infinitive)", "back": "andare (ahn-DAH-reh)" },
     { "front": "I go", "back": "io vado (EE-oh VAH-doh)" },
@@ -8,13 +8,11 @@
     { "front": "he / she goes", "back": "lui / lei va (lwee / lay vah)" },
     { "front": "we go", "back": "noi andiamo (noy ahn-DYAH-moh)" },
     { "front": "you go (plural)", "back": "voi andate (voy ahn-DAH-teh)" },
-    { "front": "they go", "back": "loro vanno (LOH-roh VAHN-noh)" },
     { "front": "to do / to make (infinitive)", "back": "fare (FAH-reh)" },
     { "front": "I do / make", "back": "io faccio (EE-oh FAHCH-choh)" },
     { "front": "you do / make (informal sing.)", "back": "tu fai (too fye)" },
     { "front": "he / she does / makes", "back": "lui / lei fa (lwee / lay fah)" },
     { "front": "we do / make", "back": "noi facciamo (noy fahch-CHAH-moh)" },
-    { "front": "you do / make (plural)", "back": "voi fate (voy FAH-teh)" },
-    { "front": "they do / make", "back": "loro fanno (LOH-roh FAHN-noh)" }
+    { "front": "you do / make (plural)", "back": "voi fate (voy FAH-teh)" }
   ]
 }
