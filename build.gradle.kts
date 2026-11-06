@@ -15,6 +15,8 @@ val decksDir = layout.projectDirectory.dir("src/jsMain/resources/decks")
 val generatedResourcesDir = layout.buildDirectory.dir("generated/deckIndex")
 val swVersionDir = layout.buildDirectory.dir("generated/swVersion")
 val jsResourcesDir = layout.projectDirectory.dir("src/jsMain/resources")
+val imageExtensions = setOf("png", "jpg", "jpeg", "webp", "gif", "svg")
+val maxImageBytes = 300 * 1024
 
 /**
  * Validates every deck JSON file against the contract in `docs/deck.schema.json`, plus the
@@ -23,6 +25,11 @@ val jsResourcesDir = layout.projectDirectory.dir("src/jsMain/resources")
  * required fields and max lengths (title 60, card front/back 200) so a malformed or oversized
  * deck can't slip into the bundle or the generated index. Accumulates all problems and fails
  * with one message listing them. See CONTRIBUTING-DECKS.md.
+ *
+ * Card images: a card's optional `frontImage`/`backImage` is a bare filename (kebab-case stem plus
+ * an allowed image extension, ≤ [maxImageBytes]) that must exist in the deck's own folder,
+ * `decks/<id>/`. Since the service worker precaches every image, dead weight is rejected too: each
+ * folder must match a deck file, hold no subfolders, and contain only files that deck references.
  */
 val validateDecks by tasks.registering {
     inputs.dir(decksDir)
@@ -30,6 +37,7 @@ val validateDecks by tasks.registering {
         val slurper = JsonSlurper()
         val stemPattern = Regex("^[a-z0-9]+(-[a-z0-9]+)*$")
         val errors = mutableListOf<String>()
+        val referencedImages = mutableMapOf<String, MutableSet<String>>() // deck stem -> filenames
 
         val files = (decksDir.asFile.listFiles { f -> f.extension == "json" && f.name != "index.json" }
             ?: emptyArray()).sortedBy { it.name }
@@ -88,6 +96,46 @@ val validateDecks by tasks.registering {
                             v.length > 200 -> err(name, "card ${i + 1} `$side` must be at most 200 characters")
                         }
                     }
+                    for (field in listOf("frontImage", "backImage")) {
+                        if (!c.containsKey(field)) continue
+                        val v = c[field]
+                        val where = "card ${i + 1} `$field`"
+                        if (v !is String) {
+                            err(name, "$where must be a string filename")
+                            continue
+                        }
+                        val ext = v.substringAfterLast('.', "")
+                        val imgStem = v.substringBeforeLast('.')
+                        if (ext !in imageExtensions || !stemPattern.matches(imgStem)) {
+                            err(name, "$where must be a kebab-case filename ending in one of ${imageExtensions.sorted().joinToString()}: \"$v\"")
+                            continue
+                        }
+                        referencedImages.getOrPut(stem) { mutableSetOf() } += v
+                        val imageFile = decksDir.asFile.resolve(stem).resolve(v)
+                        when {
+                            !imageFile.isFile -> err(name, "$where: image not found at decks/$stem/$v")
+                            imageFile.length() > maxImageBytes ->
+                                err(name, "$where: decks/$stem/$v is ${imageFile.length() / 1024} KB; images must be at most ${maxImageBytes / 1024} KB")
+                        }
+                    }
+                }
+            }
+        }
+
+        // Image folders: each must belong to a deck, be flat, and hold only referenced images.
+        val deckStems = files.map { it.nameWithoutExtension }.toSet()
+        val dirs = (decksDir.asFile.listFiles { f -> f.isDirectory } ?: emptyArray()).sortedBy { it.name }
+        for (dir in dirs) {
+            val where = "decks/${dir.name}/"
+            if (dir.name !in deckStems) {
+                err(where, "image folder has no matching deck file ${dir.name}.json")
+                continue
+            }
+            val used = referencedImages[dir.name].orEmpty()
+            for (f in (dir.listFiles() ?: emptyArray()).sortedBy { it.name }) {
+                when {
+                    f.isDirectory -> err(where, "nested folder \"${f.name}\" is not allowed; put images directly in $where")
+                    f.name !in used -> err(where, "\"${f.name}\" is not referenced by any card in ${dir.name}.json; remove it")
                 }
             }
         }
@@ -139,11 +187,12 @@ val generateDeckIndex by tasks.registering {
 /**
  * Emits `sw-version.js` for the service worker (`sw.js`). It defines two cache versions —
  * `__CODE_VERSION` (a hash of the code/shell inputs) and `__CONTENT_VERSION` (a hash of the deck
- * JSON) — so a deploy invalidates only the bucket whose inputs actually changed: editing a deck
+ * JSON and card images) — so a deploy invalidates only the bucket whose inputs actually changed: editing a deck
  * does not force users to re-download the ~800 KB bundle, and vice-versa. Hashes are over the
  * source inputs (the built bundle isn't available at resource-processing time), the same tradeoff
  * `generateDeckIndex` makes; a pure toolchain bump outside these files is the one edge that would
- * need a manual touch. Output lands next to `sw.js` in the dist via the resources wiring below.
+ * need a manual touch. It also emits `__IMAGES`, the list of every card image URL, which the SW
+ * precaches with the decks. Output lands next to `sw.js` in the dist via the resources wiring below.
  */
 val generateSwVersion by tasks.registering {
     // Code/shell inputs: all Kotlin sources plus the static shell assets and the build script
@@ -152,12 +201,15 @@ val generateSwVersion by tasks.registering {
         fileTree(layout.projectDirectory.dir("src")) { include("**/*.kt") },
         jsResourcesDir.file("styles.css"),
         jsResourcesDir.file("index.html"),
+        jsResourcesDir.file("credits.html"),
         jsResourcesDir.file("sw.js"),
         layout.projectDirectory.file("build.gradle.kts"),
     )
     val contentInputs = files(
-        fileTree(decksDir) { include("*.json"); exclude("index.json") }
+        fileTree(decksDir) { include("*.json", "*/*"); exclude("index.json") }
     )
+    // Card images (one folder level under decks/), precached by the SW alongside the decks.
+    val imageFiles = fileTree(decksDir) { include("*/*") }
     inputs.files(codeInputs).withPropertyName("codeInputs")
     inputs.files(contentInputs).withPropertyName("contentInputs")
     outputs.dir(swVersionDir)
@@ -173,11 +225,15 @@ val generateSwVersion by tasks.registering {
 
         val codeHash = hash(codeInputs)
         val contentHash = hash(contentInputs)
+        val images = imageFiles.files
+            .map { "decks/" + it.relativeTo(decksDir.asFile).invariantSeparatorsPath }
+            .sorted()
         val outFile = swVersionDir.get().file("sw-version.js").asFile
         outFile.parentFile.mkdirs()
         outFile.writeText(
             "self.__CODE_VERSION = \"$codeHash\";\n" +
-                "self.__CONTENT_VERSION = \"$contentHash\";\n"
+                "self.__CONTENT_VERSION = \"$contentHash\";\n" +
+                "self.__IMAGES = ${JsonOutput.toJson(images)};\n"
         )
     }
 }

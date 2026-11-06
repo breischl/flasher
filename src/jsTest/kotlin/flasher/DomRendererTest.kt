@@ -6,17 +6,29 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.promise
 import org.w3c.dom.HTMLElement
+import org.w3c.dom.HTMLImageElement
 import kotlin.test.AfterTest
 import kotlin.test.Test
 import kotlin.test.assertContains
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
+import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 private val testDecks = listOf(
     Deck("greetings", "Greetings", listOf(Card("hello", "hola"), Card("bye", "adiós"))),
     Deck("colors", "Colors", listOf(Card("red", "rojo"))),
+)
+
+private val imageDecks = listOf(
+    Deck(
+        "animals", "Animals",
+        listOf(
+            Card("cat", "il gatto", frontImage = "cat.svg"),
+            Card("dog", "il cane", backImage = "dog.svg"),
+        ),
+    ),
 )
 
 class DomRendererTest {
@@ -29,14 +41,14 @@ class DomRendererTest {
         mounted.clear()
     }
 
-    private fun mount(): Pair<HTMLElement, FlashcardController> {
+    private fun mount(decks: List<Deck> = testDecks): Pair<HTMLElement, FlashcardController> {
         val root = document.createElement("div") as HTMLElement
         document.body!!.appendChild(root)
         mounted += root
         val renderer = DomRenderer(root, immediateScope())
         val controller = FlashcardController(
-            summariesOf(testDecks),
-            loadDeck = loaderOf(testDecks),
+            summariesOf(decks),
+            loadDeck = loaderOf(decks),
             onChange = renderer::render,
         )
         renderer.bind(controller)
@@ -67,6 +79,13 @@ class DomRendererTest {
         val link = root.querySelector(".site-link") as? org.w3c.dom.HTMLAnchorElement
         assertNotNull(link, "expected a site-root link on Home")
         assertEquals("/", link.getAttribute("href"))
+    }
+
+    @Test
+    fun homeLinksToTheCreditsPage() {
+        val (root, _) = mount()
+        // Relative href, so it resolves under the /apps/flasher/ subpath (HOME-7).
+        assertNotNull(root.querySelector("a[href='credits.html']"), "expected a Credits link on Home")
     }
 
     @Test
@@ -228,5 +247,51 @@ class DomRendererTest {
         assertEquals(Screen.Complete, controller.state.screen)
         assertFalse(root.textContent!!.contains("Next deck"))
         assertContains(root.textContent!!, "Back to home")
+    }
+
+    private fun HTMLElement.cardImage(): HTMLImageElement? =
+        querySelector(".card .card-image") as? HTMLImageElement
+
+    @Test
+    fun imageSideShowsTheImageWithItsTextAsAltOnly() {
+        val (root, _) = mount(imageDecks)
+        root.startFirstDeck() // animals, card 0 front = cat.svg
+        val img = root.cardImage()
+        assertNotNull(img, "expected an image on the front face")
+        assertEquals("decks/animals/cat.svg", img.getAttribute("src"))
+        assertEquals("cat", img.getAttribute("alt"))
+        assertNull(root.querySelector(".card .card-text"), "image side should not show its text")
+        assertFalse(root.querySelector(".card")!!.textContent!!.contains("cat"))
+    }
+
+    @Test
+    fun textSideOfAnImageCardStillRendersText() {
+        val (root, _) = mount(imageDecks)
+        root.startFirstDeck()
+        root.click(".card") // reveal the back: text "il gatto"
+        assertNull(root.cardImage())
+        assertEquals("il gatto", root.querySelector(".card .card-text")?.textContent)
+    }
+
+    @Test
+    fun backImageShowsWhenRevealed() {
+        val (root, _) = mount(imageDecks)
+        root.startFirstDeck()
+        root.click(".card") // reveal card 0
+        root.click(".card") // advance to card 1 (dog, back image)
+        assertEquals("dog", root.querySelector(".card .card-text")?.textContent)
+        root.click(".card") // reveal
+        assertEquals("decks/animals/dog.svg", root.cardImage()?.getAttribute("src"))
+        assertEquals("il cane", root.cardImage()?.getAttribute("alt"))
+    }
+
+    @Test
+    fun answerFirstShowsTheBackImageFirst() {
+        val (root, controller) = mount(imageDecks)
+        root.click(".deck-item")
+        (root.querySelectorAll(".toggle").item(1) as HTMLElement).click() // Start on: Answer
+        root.click(".primary")
+        controller.next() // card 1 = dog, whose back is an image
+        assertEquals("decks/animals/dog.svg", root.cardImage()?.getAttribute("src"))
     }
 }

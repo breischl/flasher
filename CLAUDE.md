@@ -49,22 +49,30 @@ swapped without touching logic (design goal: "graduate" to a richer renderer lat
   jsMain resources and made a `dependsOn` of `jsProcessResources`.
 - Navigation is wrap-free (past the last card → Complete screen). Persistence stores
   `{deckId, naturalIndex}` (shuffle-independent); shuffle state is NOT persisted.
-- **Offline**: a service worker (`src/jsMain/resources/sw.js`) precaches the app + all decks so it
+- **Offline**: a service worker (`src/jsMain/resources/sw.js`) precaches the app + all decks + all card images so it
   works with no connection (e.g. on a plane) and survives reloads/tab eviction. It uses **two
-  independently-versioned caches** — shell (`index.html`/`flasher.js`/`styles.css`) and decks — so a
+  independently-versioned caches** — shell (`index.html`/`credits.html`/`flasher.js`/`styles.css`) and decks — so a
   deck edit does NOT re-download the ~800 KB bundle, and vice-versa. Versions are build-injected
   hashes of each bucket's source inputs, emitted to `sw-version.js` by the `generateSwVersion` task
-  (a `dependsOn` of `jsProcessResources`); no manual version bumping. `flasher.js` keeps its stable
+  (a `dependsOn` of `jsProcessResources`); no manual version bumping. Card images ride in the deck
+  bucket: the same task writes their URLs into `sw-version.js` as `__IMAGES`. `flasher.js` keeps its stable
   filename — precache uses `fetch({cache:'reload'})` to avoid a stale HTTP-cached bundle.
   Registration (`Main.kt`) is **gated to production** via webpack's `NODE_ENV`, so the dev server
   never caches stale assets. No installable-PWA polish (manifest/icons) — deliberately out of scope.
 - **Deck validation**: `validateDecks` (a Groovy task in `build.gradle.kts`, no deps) checks every
   deck file — kebab-case filename stem (≤50; it's the id, so uniqueness is free), no stray `id`
-  field, required `title` (≤60), non-empty `cards` with non-blank `front`/`back` (≤200). It's a
+  field, required `title` (≤60), non-empty `cards` with non-blank `front`/`back` (≤200). Card images
+  (`frontImage`/`backImage`) are bare filenames resolved against the per-deck folder `decks/<id>/`;
+  the task checks they exist and are ≤300 KB, and rejects orphan folders, nested folders and
+  unreferenced images (everything there gets precached). It's a
   `dependsOn` of `generateDeckIndex` and of `check`, so a bad deck fails the build/CI/publish instead
   of shipping. The authoring contract for outside contributors is `CONTRIBUTING-DECKS.md` + the
   machine-readable `docs/deck.schema.json` (kept in sync with the task by hand); submissions come in
   via GitHub Discussions. Note `order` is maintainer-assigned — contributors are told not to set it.
+- **Image attribution**: there is no per-deck credits field. Third-party images needing credit
+  (e.g. the CC BY-SA Wikimedia Commons art in `scuba-hand-signals/`) are credited on the static,
+  hand-maintained `src/jsMain/resources/credits.html`, linked from the home screen. Update it
+  whenever such images are added.
 
 ## Testing convention
 

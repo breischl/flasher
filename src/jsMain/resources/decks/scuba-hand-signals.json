@@ -1,0 +1,191 @@
+{
+  "title": "SCUBA Hand Signals",
+  "order": 170,
+  "cards": [
+    {
+      "front": "Hand with thumb and index finger touching in a ring, other fingers extended",
+      "frontImage": "ok.webp",
+      "back": "OK / Are you OK?"
+    },
+    {
+      "front": "Diver at the surface with both arms arched over the head, fingertips touching",
+      "frontImage": "ok-surface.webp",
+      "back": "I am OK (at the surface, from a distance)"
+    },
+    {
+      "front": "Diver at the surface with one hand resting on top of the head",
+      "frontImage": "ok-surface-one-hand.webp",
+      "back": "I am OK (at the surface, one hand free)"
+    },
+    {
+      "front": "Flat hand, palm down, rocking side to side",
+      "frontImage": "not-right.webp",
+      "back": "Something is not right / I have a problem"
+    },
+    {
+      "front": "Flat hand held up, palm facing forward",
+      "frontImage": "stop.webp",
+      "back": "Stop / Hold"
+    },
+    {
+      "front": "Fist with thumb pointing down",
+      "frontImage": "descend.webp",
+      "back": "Descend / Go down"
+    },
+    {
+      "front": "Fist with thumb pointing up",
+      "frontImage": "ascend.webp",
+      "back": "Ascend / Go up"
+    },
+    {
+      "front": "Flat hand, palm down, sweeping slowly side to side",
+      "frontImage": "level-off.webp",
+      "back": "Level off / Stay at this depth"
+    },
+    {
+      "front": "Thumbs-up held beneath a flat palm-down hand",
+      "frontImage": "ascend-to-stop.webp",
+      "back": "Stop ascending at this depth"
+    },
+    {
+      "front": "Hand with thumb and index finger extended in a C shape",
+      "frontImage": "safety-stop.webp",
+      "back": "Safety stop"
+    },
+    {
+      "front": "Flat hand, palm down, moving slowly up and down",
+      "frontImage": "slow-down.webp",
+      "back": "Slow down / Relax"
+    },
+    {
+      "front": "Index finger pointing up, circling",
+      "frontImage": "turn-around.webp",
+      "back": "Turn around"
+    },
+    {
+      "front": "Fist with thumb out, rocking side to side",
+      "frontImage": "which-way.webp",
+      "back": "Which way? / Which direction?"
+    },
+    {
+      "front": "One index finger pointing forward with the other pointing behind it",
+      "frontImage": "lead-follow.webp",
+      "back": "You lead, I follow"
+    },
+    {
+      "front": "Two index fingers held side by side",
+      "frontImage": "buddy-up.webp",
+      "back": "Buddy up / Stay together"
+    },
+    {
+      "front": "Two hands clasped together",
+      "frontImage": "hold-on.webp",
+      "back": "Hold on to each other"
+    },
+    {
+      "front": "Hand with thumb up and index finger pointing sideways",
+      "frontImage": "turn-dive.webp",
+      "back": "Turn the dive / This is the way out"
+    },
+    {
+      "front": "Fingertips of one hand touching the palm of the other in a T",
+      "frontImage": "time-up.webp",
+      "back": "Time is up / Time to end the dive"
+    },
+    {
+      "front": "Two fingers tapping the palm of the other hand",
+      "frontImage": "how-much-air.webp",
+      "back": "How much air do you have?"
+    },
+    {
+      "front": "Clenched fist held steady",
+      "frontImage": "low-on-air.webp",
+      "back": "I am low on air / On reserve"
+    },
+    {
+      "front": "Diver drawing a flat hand across the throat",
+      "frontImage": "out-of-air.webp",
+      "back": "I am out of air"
+    },
+    {
+      "front": "Diver pointing at the regulator in their mouth, then towards their buddy",
+      "frontImage": "give-me-air.webp",
+      "back": "Give me air / Share air"
+    },
+    {
+      "front": "Thumb and fingers opening and closing",
+      "frontImage": "bubbles.webp",
+      "back": "Bubbles / Your gear is leaking air"
+    },
+    {
+      "front": "Diver pointing at the side of the head next to the ear",
+      "frontImage": "cant-equalize.webp",
+      "back": "I can't equalize this ear"
+    },
+    {
+      "front": "Diver hugging the chest with arms crossed",
+      "frontImage": "cold.webp",
+      "back": "I am cold"
+    },
+    {
+      "front": "Hand repeatedly opening and closing into a fist",
+      "frontImage": "cramp.webp",
+      "back": "I have a cramp"
+    },
+    {
+      "front": "Hand with fingers bunched, pointing forward",
+      "frontImage": "entangled.webp",
+      "back": "I am entangled"
+    },
+    {
+      "front": "Two fingers scissoring open and closed",
+      "frontImage": "cut-the-line.webp",
+      "back": "Cut the line"
+    },
+    {
+      "front": "Diver pushing a clenched fist in one direction",
+      "frontImage": "danger-there.webp",
+      "back": "Danger in that direction"
+    },
+    {
+      "front": "Diver with clenched fists crossed in front of the chest",
+      "frontImage": "danger.webp",
+      "back": "Danger!"
+    },
+    {
+      "front": "Diver pointing two fingers at their own eyes",
+      "frontImage": "look.webp",
+      "back": "Look / Watch"
+    },
+    {
+      "front": "Diver tapping the side of the head with a finger",
+      "frontImage": "think.webp",
+      "back": "Think / Remember"
+    },
+    {
+      "front": "Diver shrugging with both palms turned up",
+      "frontImage": "dont-know.webp",
+      "back": "I don't know"
+    },
+    {
+      "front": "Fingers pointing down, thumb rubbing against the fingertips",
+      "frontImage": "silt.webp",
+      "back": "Silt"
+    },
+    {
+      "front": "Two cupped hands held together like a boat hull",
+      "frontImage": "boat.webp",
+      "back": "Boat"
+    },
+    {
+      "front": "Diver at the surface waving a raised arm side to side",
+      "frontImage": "help-surface.webp",
+      "back": "Help! (at the surface)"
+    },
+    {
+      "front": "Diver at the surface with one arm held still and raised",
+      "frontImage": "fetch-me.webp",
+      "back": "Come and get me when convenient (at the surface)"
+    }
+  ]
+}

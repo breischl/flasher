@@ -37,6 +37,9 @@ decision that must update this document in the same commit.
   renders, with a "no decks" message instead of a broken page.
 - **HOME-6** The home screen links out to the site root (the app lives under a subpath of a larger
   site) and to the deck-contribution guide on GitHub.
+- **HOME-7** The home screen links to a bundled Credits page (`credits.html`) that gives the
+  attribution required by any third-party deck images (author, license, source). It is part of
+  the app shell, so it is available offline.
 
 ## OPT — deck options
 
@@ -71,6 +74,10 @@ decision that must update this document in the same commit.
   Home, options, or Complete screens.
 - **NAV-10** A Home action is always available while studying; it abandons the session (clearing
   the saved position, PERSIST-3) and returns to the deck list.
+- **NAV-11** A card face that has an image (FORMAT-3) shows the image instead of its text, scaled
+  to fit the card. That face's text is used only as the image's alt text and is never displayed,
+  so a picture prompt doesn't give away its answer. Tapping an image behaves exactly like tapping
+  the card.
 
 ## COMP — deck complete
 
@@ -98,7 +105,7 @@ decision that must update this document in the same commit.
 ## OFFLINE — working without a connection
 
 - **OFFLINE-1** After the first visit with a connection, the app works fully offline: the app
-  shell and **all** decks are precached by a service worker, and this survives reloads and tab
+  shell and **all** decks and their card images are precached by a service worker, and this survives reloads and tab
   eviction.
 - **OFFLINE-2** The app shell and the decks are cached in two independently versioned buckets: a
   deck edit must not force re-downloading the (large) app bundle, and an app change must not force
@@ -122,13 +129,22 @@ authoring guide is [`CONTRIBUTING-DECKS.md`](../CONTRIBUTING-DECKS.md). Behavior
   code change.
 - **FORMAT-2** A deck file contains `title` (non-blank, ≤ 60 chars), optional maintainer-assigned
   integer `order`, and `cards` — and nothing else.
-- **FORMAT-3** Each card is `{ "front", "back" }`, both non-blank and ≤ 200 chars. Content is
-  plain text: HTML/Markdown is never interpreted.
+- **FORMAT-3** Each card is `{ "front", "back" }`, both non-blank and ≤ 200 chars, plus optional
+  `frontImage` / `backImage`. Text is plain: HTML/Markdown is never interpreted. When a face has
+  an image, its text is still required and serves as the image's alt text.
 - **FORMAT-4** `cards` must be a non-empty array.
 - **FORMAT-5** The deck index (`decks/index.json`) is generated at build time from the deck files,
   sorted by `order`; it is never hand-maintained.
 - **FORMAT-6** An invalid deck file fails the build (and therefore CI and publish) with a clear
   message — a malformed deck must never reach the live site.
+- **FORMAT-8** Card images live in a folder named after the deck: `decks/<id>/<file>`. A
+  `frontImage`/`backImage` value is a bare filename (kebab-case stem; `.png`, `.jpg`, `.jpeg`,
+  `.webp`, `.gif` or `.svg`) that must exist in that folder and be ≤ 300 KB. Because every image is
+  precached, unused weight is rejected: each image folder must match a deck file, contain no
+  subfolders, and hold only files that deck references.
+- **FORMAT-9** Third-party images must be licensed for redistribution. When the license requires
+  attribution (e.g. CC BY / BY-SA), the credit is added to the Credits page (HOME-7) in the same
+  change that adds the images.
 - **FORMAT-7** `deck.schema.json` and the build-time validation must be kept in sync; a change to
   the deck contract updates both (and this section).
 
@@ -137,7 +153,8 @@ authoring guide is [`CONTRIBUTING-DECKS.md`](../CONTRIBUTING-DECKS.md). Behavior
 - **UX-1** The app is mobile-first: layout, touch targets, and card text sizing are designed for
   phones, while remaining usable on desktop.
 - **UX-2** The app adapts to the platform's light/dark color scheme preference.
-- **UX-3** The UI uses no images; presentation is pure CSS.
+- **UX-3** The UI chrome uses no images; presentation is pure CSS. (Card images are deck
+  content, FORMAT-8.)
 - **UX-4** The app is a static site: plain files servable verbatim from any static host, with no
   backend and no server-side rendering.
 - **UX-5** All asset and deck URLs are relative, so the app runs unchanged from a subpath (it is
@@ -151,4 +168,5 @@ maintainer, not an improvement.
 - **No backend, accounts, or sync** — the app is a static site; all state is in the browser.
 - **No installable-PWA polish** (web app manifest, icons, install prompt) — offline support via
   the service worker is in scope; installability is not.
-- **No rich card content** — no HTML, Markdown, images, or audio in cards; plain text only.
+- **No rich card content beyond images** — no HTML, Markdown, or audio in cards; a face is plain
+  text or a single image.

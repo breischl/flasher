@@ -30,11 +30,35 @@ Filenames must use use kebab-case (e.g. `food-basics.json`), and be ≤ 50 chara
 | `title` | yes      | Non-blank, **≤ 60 chars**. Shown in the home list and as the deck heading. |
 | `cards` | yes      | Non-empty array. Each card is `{ "front": <string>, "back": <string> }`. |
 | `front` / `back` | yes | Non-blank, **≤ 200 chars each**. Keep them short so they stay readable on a phone. |
+| `frontImage` / `backImage` | no | Show an image on that side instead of the text. See [Card images](#card-images). |
 | `order` | **no** — do not set it | Controls the deck's position in the home list. The maintainer assigns it at merge time; you can't know how your deck should sort relative to the existing ones, so leave it out. |
 
 - **Plain text only.** HTML and Markdown are *not* supported anywhere.
 - **Strict JSON.** No comments, no trailing commas, keys and strings must be double-quoted.
 - **No extra fields.** Stick to the fields above.
+
+## Card images
+
+Either side of a card can be a picture instead of text:
+
+```json
+{ "front": "cat", "frontImage": "cat.webp", "back": "il gatto" }
+```
+
+- Put the images in a folder named after your deck, next to the deck file:
+  `food-basics.json` → `food-basics/cat.webp`. The field holds just the filename.
+- Filenames are kebab-case with a `.png`, `.jpg`, `.jpeg`, `.webp`, `.gif` or `.svg` extension.
+  Each image must be **≤ 300 KB**. Prefer `.webp`, or `.svg` for simple drawings, and size images
+  for a phone screen (around 800 px is plenty).
+- **The text is still required.** When a side has an image, its text isn't shown. It becomes the
+  image's alt text (read by screen readers), so describe the picture, e.g. `"cat"`.
+- Only include images your cards use. Every image is downloaded for offline use, so unused files
+  fail validation. The folder can't contain subfolders.
+- Only submit images you have the rights to share. Images under a license that requires credit
+  (e.g. Creative Commons BY / BY-SA from Wikimedia Commons) are welcome. Include the author,
+  license and source link with your submission, and it will be added to the app's Credits page.
+
+If you're submitting through a Discussion, attach the images alongside the JSON.
 
 ## Validate it locally (optional)
 

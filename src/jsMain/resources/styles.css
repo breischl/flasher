@@ -205,3 +205,28 @@ button:active {
     margin-top: 0.5rem;
     min-width: 12rem;
 }
+
+.footer-links {
+    display: flex;
+    gap: 1.25rem;
+    margin-top: 0.25rem;
+}
+
+.credits h2 {
+    margin: 0.5rem 0 0;
+    font-size: 1.2rem;
+}
+
+.credits p {
+    margin: 0;
+    line-height: 1.5;
+}
+
+.credits a {
+    color: var(--accent);
+}
+
+.credits .site-link {
+    color: inherit;
+    text-decoration: none;
+}

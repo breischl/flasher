@@ -11,9 +11,9 @@ Kotlin Multiplatform and compiled to JavaScript.
 - One-gesture walk: tap/click (or Space/Enter) reveals the card, then the same gesture advances —
   step through a whole deck without switching gestures. Prev/Next buttons, swipe, and arrow keys too
 - Remembers where you left off (localStorage) and drops you back into that card
-- **Works offline** — a service worker caches the app and every deck, so after the first visit it
+- **Works offline** — a service worker caches the app and every deck (including card images), so after the first visit it
   keeps working with no connection (e.g. on a plane) and survives reloads
-- No images; pure CSS, adapts to light/dark, sized for phones
+- Card faces can be text or an image; the UI itself is pure CSS, adapts to light/dark, sized for phones
 
 ## Requirements
 
@@ -69,6 +69,7 @@ integration uses).
 Decks are plain JSON under `src/jsMain/resources/decks/`:
 
 - `<deck-id>.json` — `{ "title", "order", "cards": [ { "front", "back" }, … ] }`. `order` is an integer that controls the deck's position in the list.
+- `<deck-id>/` — optional folder of that deck's card images, used by a card's `frontImage` / `backImage` (a bare filename). The text is then alt text only.
 
 Just add a file and rebuild — **`decks/index.json` is generated at build time** from the deck files. 
 Deck files are validated by the `validateDecks` Gradle task, so a malformed deck fails the build rather 

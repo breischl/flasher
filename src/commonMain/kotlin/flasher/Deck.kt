@@ -2,11 +2,17 @@ package flasher
 
 import kotlinx.serialization.Serializable
 
-/** A single flashcard: a prompt side and its answer side. */
+/**
+ * A single flashcard: a prompt side and its answer side. Either side may instead show an image
+ * ([frontImage] / [backImage]: a bare filename in the deck's own image folder); that side's text is
+ * then used only as the image's alt text, never displayed. Path resolution is the renderer's job.
+ */
 @Serializable
 data class Card(
     val front: String,
     val back: String,
+    val frontImage: String? = null,
+    val backImage: String? = null,
 )
 
 /**

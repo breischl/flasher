@@ -37,6 +37,16 @@
             "description": "Answer side. Plain text only (no HTML/Markdown is interpreted).",
             "minLength": 1,
             "maxLength": 200
+          },
+          "frontImage": {
+            "type": "string",
+            "description": "Optional image shown on the prompt side instead of `front`, which then serves only as alt text. A bare filename in the deck's own folder, decks/<deck-id>/ (the build checks it exists, is at most 300 KB, and that the folder holds no unreferenced files).",
+            "pattern": "^[a-z0-9]+(-[a-z0-9]+)*\\.(png|jpg|jpeg|webp|gif|svg)$"
+          },
+          "backImage": {
+            "type": "string",
+            "description": "Optional image shown on the answer side instead of `back`, which then serves only as alt text. Same rules as `frontImage`.",
+            "pattern": "^[a-z0-9]+(-[a-z0-9]+)*\\.(png|jpg|jpeg|webp|gif|svg)$"
           }
         }
       }

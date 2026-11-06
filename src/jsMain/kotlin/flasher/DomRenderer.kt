@@ -9,6 +9,7 @@ import kotlinx.html.div
 import kotlinx.html.dom.append
 import kotlinx.html.h1
 import kotlinx.html.h2
+import kotlinx.html.img
 import kotlinx.html.js.onClickFunction
 import kotlinx.html.p
 import kotlinx.html.span
@@ -64,11 +65,15 @@ class DomRenderer(
                 }
             }
         }
-        // Point would-be contributors at the deck-authoring guide (hosted on GitHub; not bundled).
-        a(href = "https://github.com/breischl/flasher/blob/main/CONTRIBUTING-DECKS.md", classes = "link contribute-link") {
-            attributes["target"] = "_blank"
-            attributes["rel"] = "noopener"
-            +"Contribute a deck →"
+        div("footer-links") {
+            // Point would-be contributors at the deck-authoring guide (hosted on GitHub; not bundled).
+            a(href = "https://github.com/breischl/flasher/blob/main/CONTRIBUTING-DECKS.md", classes = "link contribute-link") {
+                attributes["target"] = "_blank"
+                attributes["rel"] = "noopener"
+                +"Contribute a deck →"
+            }
+            // Static page (bundled, precached) carrying the attribution that CC BY-SA deck images require.
+            a(href = "credits.html", classes = "link contribute-link") { +"Credits" }
         }
     }
 
@@ -107,7 +112,14 @@ class DomRenderer(
         div("card ${if (state.isFlipped) "is-back" else "is-front"}") {
             onClickFunction = { controller.flipOrAdvance() }
             span("card-side") { +if (state.isFlipped) "answer" else "prompt" }
-            span("card-text") { +if (state.isFlipped) card.back else card.front }
+            val text = if (state.isFlipped) card.back else card.front
+            val image = if (state.isFlipped) card.backImage else card.frontImage
+            if (image != null) {
+                // The side's text is alt text only — showing it would give away a picture prompt.
+                img(classes = "card-image", alt = text, src = "$DECKS_BASE_PATH/${state.currentDeck!!.id}/$image")
+            } else {
+                span("card-text") { +text }
+            }
             // On the starting face the gesture reveals; once revealed, the same gesture advances.
             val revealed = state.isFlipped != state.answerFirst
             span("card-hint muted") { +if (revealed) "tap for next" else "tap to flip" }
