@@ -1,7 +1,0 @@
-{
-  "title": "Image demo",
-  "cards": [
-    { "front": "a sun", "frontImage": "sun.svg", "back": "il sole" },
-    { "front": "the sun", "back": "a sun", "backImage": "sun.svg" }
-  ]
-}
