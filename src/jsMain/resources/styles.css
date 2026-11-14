@@ -171,6 +171,18 @@ button:active {
     line-height: 1.2;
 }
 
+/* Card images are typically larger than a phone screen: shrink to fit inside the card's padding
+   (width) and leave room for the label/hint and nav buttons (height), keeping aspect ratio. */
+.card-image {
+    display: block;
+    max-width: 100%;
+    max-height: 50dvh;
+    width: auto;
+    height: auto;
+    min-height: 0;
+    object-fit: contain;
+}
+
 .card-hint {
     font-size: 0.8rem;
 }
