@@ -41,7 +41,7 @@ Domain logic and the browser UI are covered by unit + Karma/Chrome browser tests
 ```
 
 The self-contained bundle is written to `build/dist/js/productionExecutable/`
-(`index.html`, `flasher.js`, `styles.css`, `decks/`, plus `sw.js`/`sw-version.js` for offline).
+(`index.html`, `flasher.js`, `styles.css`, `decks/`, plus the generated `sw.js` for offline).
 Serve that directory from any static host (GitHub Pages, Netlify, S3, …). To try it locally:
 
 ```sh

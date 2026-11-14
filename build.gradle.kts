@@ -13,7 +13,8 @@ repositories {
 
 val decksDir = layout.projectDirectory.dir("src/jsMain/resources/decks")
 val generatedResourcesDir = layout.buildDirectory.dir("generated/deckIndex")
-val swVersionDir = layout.buildDirectory.dir("generated/swVersion")
+val swOutDir = layout.buildDirectory.dir("generated/serviceWorker")
+val swTemplate = layout.projectDirectory.file("src/jsMain/serviceWorker/sw.js")
 val jsResourcesDir = layout.projectDirectory.dir("src/jsMain/resources")
 val imageExtensions = setOf("png", "jpg", "jpeg", "webp", "gif", "svg")
 val maxImageBytes = 300 * 1024
@@ -185,16 +186,20 @@ val generateDeckIndex by tasks.registering {
 }
 
 /**
- * Emits `sw-version.js` for the service worker (`sw.js`). It defines two cache versions —
+ * Generates the service worker `sw.js` from its template (`src/jsMain/serviceWorker/sw.js`),
+ * inlining build constants in place of the `@@SW_BUILD_CONSTANTS@@` marker. They are inlined
+ * (rather than loaded from a separate file via importScripts) so that every content or code
+ * change alters the bytes of `sw.js` itself — the only thing Safari/iOS compares when deciding
+ * whether to install an updated SW. It defines two cache versions —
  * `__CODE_VERSION` (a hash of the code/shell inputs) and `__CONTENT_VERSION` (a hash of the deck
  * JSON and card images) — so a deploy invalidates only the bucket whose inputs actually changed: editing a deck
  * does not force users to re-download the ~800 KB bundle, and vice-versa. Hashes are over the
  * source inputs (the built bundle isn't available at resource-processing time), the same tradeoff
  * `generateDeckIndex` makes; a pure toolchain bump outside these files is the one edge that would
  * need a manual touch. It also emits `__IMAGES`, the list of every card image URL, which the SW
- * precaches with the decks. Output lands next to `sw.js` in the dist via the resources wiring below.
+ * precaches with the decks. Output lands at the dist root via the resources wiring below.
  */
-val generateSwVersion by tasks.registering {
+val generateServiceWorker by tasks.registering {
     // Code/shell inputs: all Kotlin sources plus the static shell assets and the build script
     // (which carries dependency versions). The deck files feed the content hash instead.
     val codeInputs = files(
@@ -202,7 +207,7 @@ val generateSwVersion by tasks.registering {
         jsResourcesDir.file("styles.css"),
         jsResourcesDir.file("index.html"),
         jsResourcesDir.file("credits.html"),
-        jsResourcesDir.file("sw.js"),
+        swTemplate,
         layout.projectDirectory.file("build.gradle.kts"),
     )
     val contentInputs = files(
@@ -212,7 +217,7 @@ val generateSwVersion by tasks.registering {
     val imageFiles = fileTree(decksDir) { include("*/*") }
     inputs.files(codeInputs).withPropertyName("codeInputs")
     inputs.files(contentInputs).withPropertyName("contentInputs")
-    outputs.dir(swVersionDir)
+    outputs.dir(swOutDir)
     doLast {
         fun hash(fileCollection: FileCollection): String {
             val digest = MessageDigest.getInstance("SHA-256")
@@ -228,13 +233,16 @@ val generateSwVersion by tasks.registering {
         val images = imageFiles.files
             .map { "decks/" + it.relativeTo(decksDir.asFile).invariantSeparatorsPath }
             .sorted()
-        val outFile = swVersionDir.get().file("sw-version.js").asFile
-        outFile.parentFile.mkdirs()
-        outFile.writeText(
+        val constants =
             "self.__CODE_VERSION = \"$codeHash\";\n" +
                 "self.__CONTENT_VERSION = \"$contentHash\";\n" +
-                "self.__IMAGES = ${JsonOutput.toJson(images)};\n"
-        )
+                "self.__IMAGES = ${JsonOutput.toJson(images)};"
+        val marker = "/* @@SW_BUILD_CONSTANTS@@ */"
+        val template = swTemplate.asFile.readText()
+        check(template.contains(marker)) { "sw.js template is missing the $marker marker" }
+        val outFile = swOutDir.get().file("sw.js").asFile
+        outFile.parentFile.mkdirs()
+        outFile.writeText(template.replace(marker, constants))
     }
 }
 
@@ -263,7 +271,7 @@ kotlin {
         }
         val jsMain by getting {
             resources.srcDir(generatedResourcesDir)
-            resources.srcDir(swVersionDir)
+            resources.srcDir(swOutDir)
             dependencies {
                 implementation("org.jetbrains.kotlinx:kotlinx-html-js:0.12.0")
             }
@@ -271,8 +279,8 @@ kotlin {
     }
 }
 
-// The generated index and service-worker version file must exist before resources are processed.
-tasks.named("jsProcessResources") { dependsOn(generateDeckIndex, generateSwVersion) }
+// The generated index and service worker must exist before resources are processed.
+tasks.named("jsProcessResources") { dependsOn(generateDeckIndex, generateServiceWorker) }
 
 // Validate decks as part of `check` so local test runs and CI catch bad decks.
 tasks.named("check") { dependsOn(validateDecks) }

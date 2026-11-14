@@ -118,6 +118,10 @@ decision that must update this document in the same commit.
   serve stale cached assets.
 - **OFFLINE-6** Decks fetched lazily at runtime are added to the deck cache, so anything viewed
   online stays available offline even before precaching finishes.
+- **OFFLINE-7** Any published change to the app or decks must be detectable by every supported
+  browser, including iOS Safari: the cache versions are inlined into the service worker script
+  itself, so its bytes change whenever a bucket does (Safari does not reliably re-check scripts
+  the worker imports).
 
 ## FORMAT — deck files
 

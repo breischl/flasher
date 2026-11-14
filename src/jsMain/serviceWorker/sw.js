@@ -5,11 +5,17 @@
 //   - shell cache: index.html, credits.html, flasher.js, styles.css  (keyed by __CODE_VERSION)
 //   - deck cache:  decks/index.json + every deck + every card image (keyed by __CONTENT_VERSION)
 // The versions are build-injected hashes of each bucket's source inputs (see the
-// generateSwVersion Gradle task), so a deploy invalidates exactly the bucket that changed.
+// generateServiceWorker Gradle task), so a deploy invalidates exactly the bucket that changed.
+//
+// This file is a TEMPLATE: the build replaces the marker below with the version constants and
+// image list, inlined. They must live in sw.js itself (not an importScripts'd file) because a
+// browser only installs an updated SW when the bytes of sw.js change — Safari/iOS does not
+// reliably byte-check imported scripts, so a separate version file left iPhones stuck on stale
+// caches forever.
 //
 // All URLs are relative so the SW works under the /apps/flasher/ subpath on breischl.dev.
 
-importScripts("sw-version.js"); // defines self.__CODE_VERSION, self.__CONTENT_VERSION, self.__IMAGES
+/* @@SW_BUILD_CONSTANTS@@ */ // defines self.__CODE_VERSION, self.__CONTENT_VERSION, self.__IMAGES
 
 const SHELL_CACHE = "flasher-shell-" + self.__CODE_VERSION;
 const DECK_CACHE = "flasher-decks-" + self.__CONTENT_VERSION;
@@ -29,7 +35,7 @@ async function precache(cacheName, urls) {
 }
 
 // Every deck file plus every card image (decks/<id>/<file>, listed at build time in
-// sw-version.js). Images are precached eagerly, on the assumption the first visit is on WiFi.
+// the build constants above). Images are precached eagerly, on the assumption the first visit is on WiFi.
 async function deckUrls() {
     const response = await fetch("decks/index.json", { cache: "reload" });
     const summaries = await response.json();

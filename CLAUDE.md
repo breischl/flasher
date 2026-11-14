@@ -49,13 +49,15 @@ swapped without touching logic (design goal: "graduate" to a richer renderer lat
   jsMain resources and made a `dependsOn` of `jsProcessResources`.
 - Navigation is wrap-free (past the last card → Complete screen). Persistence stores
   `{deckId, naturalIndex}` (shuffle-independent); shuffle state is NOT persisted.
-- **Offline**: a service worker (`src/jsMain/resources/sw.js`) precaches the app + all decks + all card images so it
+- **Offline**: a service worker (template at `src/jsMain/serviceWorker/sw.js`) precaches the app + all decks + all card images so it
   works with no connection (e.g. on a plane) and survives reloads/tab eviction. It uses **two
   independently-versioned caches** — shell (`index.html`/`credits.html`/`flasher.js`/`styles.css`) and decks — so a
   deck edit does NOT re-download the ~800 KB bundle, and vice-versa. Versions are build-injected
-  hashes of each bucket's source inputs, emitted to `sw-version.js` by the `generateSwVersion` task
+  hashes of each bucket's source inputs, inlined into the generated `sw.js` by the `generateServiceWorker` task
   (a `dependsOn` of `jsProcessResources`); no manual version bumping. Card images ride in the deck
-  bucket: the same task writes their URLs into `sw-version.js` as `__IMAGES`. `flasher.js` keeps its stable
+  bucket: the same task inlines their URLs as `__IMAGES`. The constants MUST stay inlined in `sw.js`
+  (not an `importScripts`'d file): iOS Safari only installs an updated SW when `sw.js`'s own bytes
+  change, so a separate version file left iPhones stuck on a stale cache. `flasher.js` keeps its stable
   filename — precache uses `fetch({cache:'reload'})` to avoid a stale HTTP-cached bundle.
   Registration (`Main.kt`) is **gated to production** via webpack's `NODE_ENV`, so the dev server
   never caches stale assets. No installable-PWA polish (manifest/icons) — deliberately out of scope.
